@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DictionaryApplicationController {
     private Stage stage;
@@ -25,9 +26,9 @@ public class DictionaryApplicationController {
     }
     @FXML
     protected void goToSearchScreen(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource( "SearchScreen.fxml"));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SearchScreen.fxml")));
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080 , 720);
+        scene = new Scene(root, 600 , 400);
         stage.setScene(scene);
 
     }

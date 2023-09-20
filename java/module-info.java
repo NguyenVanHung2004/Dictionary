@@ -6,7 +6,8 @@ module com.example.englishapp {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
-
+    requires java.sql;
+    requires mysql.connector.j;
     opens com.example.englishapp to javafx.fxml;
     exports com.example.englishapp;
 }
