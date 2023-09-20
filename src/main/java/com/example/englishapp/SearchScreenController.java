@@ -56,10 +56,10 @@ public class SearchScreenController implements Initializable {
       FilteredList<VocabModel> filteredData = new FilteredList<>(vocabModelObservableList, b->true);
       keyWordField.textProperty().addListener( (observable, oldValue, newValue) ->{
         filteredData.setPredicate(vocabModel -> {
-          if ( newValue.isEmpty() || newValue.isBlank() || newValue == null)
+          if (newValue.isEmpty() || newValue.isBlank())
             return true;
           String searchKeyWord = newValue.toLowerCase();
-          if ( vocabModel.getWord().toLowerCase().indexOf(searchKeyWord) > -1)
+          if (vocabModel.getWord().toLowerCase().contains(searchKeyWord))
               return true;
           return false;
         }) ;

@@ -1,39 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SearchScreenController">
-   <top>
-      <AnchorPane prefHeight="39.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <TextField fx:id="keyWordField" layoutX="225.0" layoutY="10.0" prefHeight="26.0" prefWidth="244.0" promptText="keyword" />
-            <Label layoutX="172.0" layoutY="14.0" text="Search" />
-         </children>
-      </AnchorPane>
-   </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SearchScreenController">
    <left>
-      <VBox mouseTransparent="true" prefHeight="354.0" prefWidth="71.0" BorderPane.alignment="CENTER">
+      <VBox mouseTransparent="true" prefHeight="536.0" prefWidth="120.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="63.0" prefWidth="100.0" text="Button" />
-            <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="100.0" text="Button" />
-            <Button mnemonicParsing="false" prefHeight="76.0" prefWidth="100.0" text="Button" />
+            <Label prefHeight="34.0" prefWidth="122.0" text="  Dictionary">
+               <font>
+                  <Font name="Berlin Sans FB" size="16.0" />
+               </font>
+            </Label>
+            <VBox prefHeight="132.0" prefWidth="120.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="64.0" prefWidth="120.0" spacing="10.0">
+                     <children>
+                        <FontAwesomeIcon fill="#e70000" glyphName="BOOK" selectionFill="#308c56" size="2em" text="" />
+                        <Label text="English-English" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="64.0" prefWidth="120.0" spacing="10.0">
+                     <children>
+                        <FontAwesomeIcon fill="#0331ff" glyphName="BOOK" selectionEnd="0" selectionFill="#1cc962" size="2em" text="" />
+                        <Label text="English-VN" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
          </children>
       </VBox>
    </left>
-   <right>
-      <TableView fx:id="vocabTableView" prefHeight="290.0" prefWidth="746.0" BorderPane.alignment="CENTER">
+   <top>
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="64.0" prefWidth="1002.0" spacing="20.0" style="-fx-background-color: #fff;" BorderPane.alignment="BOTTOM_LEFT">
+         <children>
+            <Label alignment="CENTER" prefHeight="64.0" prefWidth="93.0" text="Name of App" />
+            <Separator maxHeight="-Infinity" orientation="VERTICAL" prefHeight="50.0" prefWidth="14.0" />
+            <HBox alignment="CENTER_LEFT" prefHeight="64.0" prefWidth="478.0" spacing="15.0">
+               <children>
+                  <TextField fx:id="keyWordField" opacity="0.87" prefHeight="34.0" prefWidth="256.0" promptText="Search" style="-fx-background-color: #fff; -fx-border-radius: 50; -fx-border-color: #D7D7D7;">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <FontAwesomeIcon fill="#ec7777" glyphName="SEARCH" selectionFill="#363e8e" selectionStart="0" size="2em" stroke="#30367e" text="" textAlignment="CENTER" wrappingWidth="30.342869758605957">
+                     <font>
+                        <Font size="47.0" />
+                     </font>
+                  </FontAwesomeIcon>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TableView fx:id="vocabTableView" prefHeight="536.0" prefWidth="880.0" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn fx:id="wordTableColumn" prefWidth="75.0" text="Word" />
           <TableColumn fx:id="wordTypeTableColumn" prefWidth="75.0" text="Word Type" />
-            <TableColumn fx:id="definitionTableColumn" prefWidth="377.59997253417964" text="Definition" />
+            <TableColumn fx:id="definitionTableColumn" prefWidth="711.2000579833984" text="Definition" />
         </columns>
       </TableView>
-   </right>
+   </center>
 </BorderPane>
