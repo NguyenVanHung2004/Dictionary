@@ -28,7 +28,7 @@ public class DictionaryApplicationController {
     protected void goToSearchScreen(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SearchScreen.fxml")));
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 600 , 400);
+        scene = new Scene(root, 800 , 500);
         stage.setScene(scene);
 
     }
