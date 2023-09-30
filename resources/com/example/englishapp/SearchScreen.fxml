@@ -2,22 +2,20 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.web.WebView?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SearchScreenController">
    <children>
       <VBox prefHeight="500.0" prefWidth="157.0" styleClass="backgroundColor">
          <children>
-            <AnchorPane prefHeight="201.0" prefWidth="154.0">
+            <AnchorPane prefHeight="170.0" prefWidth="146.0">
                <children>
                   <Separator layoutX="13.0" layoutY="68.0" opacity="0.63" prefHeight="3.0" prefWidth="120.0" />
                   <HBox alignment="CENTER_LEFT" layoutY="70.0" mouseTransparent="true" prefHeight="40.0" prefWidth="146.0">
@@ -33,10 +31,28 @@
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutY="118.0" prefHeight="40.0" prefWidth="146.0">
+                  <Text fill="WHITE" layoutX="14.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dictionary" wrappingWidth="71.3101806640625">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+                  <FontAwesomeIcon fill="WHITE" glyphName="BARS" layoutX="113.0" layoutY="36.0" size="2em" text="" wrappingWidth="19.199951171875" />
+                  <Button layoutX="8.0" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="130.0" styleClass="backgroundColor" text="Vietnamese" textFill="WHITE" />
+                  <FontAwesomeIcon fill="#90ffbd" glyphName="BOOK" layoutX="14.0" layoutY="145.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="26.285712242126465" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="104.0" prefWidth="146.0">
+               <children>
+                  <Text fill="WHITE" layoutX="21.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Translate" wrappingWidth="71.3101806640625">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+                  <Separator layoutX="13.0" layoutY="34.0" opacity="0.63" prefHeight="16.0" prefWidth="120.0" />
+                  <HBox alignment="CENTER_LEFT" layoutY="42.0" mouseTransparent="true" prefHeight="40.0" prefWidth="146.0">
                      <children>
-                        <FontAwesomeIcon fill="#90ffbd" glyphName="BOOK" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="30.39996337890625" />
-                        <Text fill="WHITE" fontSmoothingType="LCD" stroke="#ff1515" strokeType="OUTSIDE" strokeWidth="0.0" text="VietNamese" textAlignment="CENTER" wrappingWidth="77.710205078125">
+                        <FontAwesomeIcon fill="WHITE" glyphName="LANGUAGE" size="2em" text="" wrappingWidth="26.285712242126465" />
+                        <Text fill="WHITE" fontSmoothingType="LCD" stroke="#ff1515" strokeType="OUTSIDE" strokeWidth="0.0" text="Google" textAlignment="CENTER" wrappingWidth="71.3101806640625">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -46,23 +62,22 @@
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-                  <Text fill="WHITE" layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dictionary" wrappingWidth="71.3101806640625">
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="196.0" prefWidth="146.0">
+               <children>
+                  <Text fill="WHITE" layoutX="28.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My list" wrappingWidth="62.51019287109375">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <FontAwesomeIcon fill="WHITE" glyphName="BARS" layoutX="113.0" layoutY="36.0" size="2em" text="" wrappingWidth="19.199951171875" />
+                  <Separator layoutX="13.0" layoutY="26.0" opacity="0.63" prefHeight="16.0" prefWidth="120.0" />
+                  <Button contentDisplay="BOTTOM" layoutX="6.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarMyWord" prefHeight="34.0" prefWidth="130.0" styleClass="backgroundColor" text="My word" textFill="WHITE" />
+                  <FontAwesomeIcon fill="#d1d1d1" glyphName="DATABASE" layoutX="13.0" layoutY="74.0" size="2em" />
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="690.0">
-         <children>
-            <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" prefHeight="40.0" prefWidth="269.0" promptText="Search here" />
-            <FontAwesomeIcon fx:id="searchButton" glyphName="SEARCH" layoutX="299.0" layoutY="45.0" size="2em" text="" wrappingWidth="19.199951171875" />
-            <ListView fx:id="searchList" layoutX="21.0" layoutY="67.0" prefHeight="433.0" prefWidth="200.0" />
-            <WebView fx:id="webView" layoutX="218.0" layoutY="67.0" prefHeight="433.0" prefWidth="437.0" />
-         </children>
-      </Pane>
+      <StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="654.0" />
    </children>
 </HBox>
