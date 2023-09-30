@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" prefHeight="40.0" prefWidth="269.0" promptText="Search here" />
+      <FontAwesomeIcon fx:id="searchButton" glyphName="SEARCH" layoutX="299.0" layoutY="45.0" size="2em" text="" wrappingWidth="19.199951171875" />
+      <TableView layoutX="21.0" layoutY="75.0" prefHeight="410.0" prefWidth="594.0">
+        <columns>
+          <TableColumn prefWidth="165.60004043579102" text="C1" />
+          <TableColumn prefWidth="427.9999237060547" text="C2" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>
