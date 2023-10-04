@@ -1,3 +1,3 @@
 # Dictionary
-- Tra cứu từ điển Anh Anh bằng sql
+- Tra cứu từ điển Anh Việt bằng sql
   
