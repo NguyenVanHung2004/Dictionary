@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
   public Connection databaseLink;
 
-  public Connection getDatabaseConnection() {
+  public Connection getDatabaseConnection( ) {
     String databaseName = "dictonary";
     String databaseUser = "root";
     String databasePassWord = "Nguyenvanhung2004yb!";
