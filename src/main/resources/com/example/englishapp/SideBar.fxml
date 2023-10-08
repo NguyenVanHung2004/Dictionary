@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SearchScreenController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SideBarController">
    <children>
       <VBox prefHeight="500.0" prefWidth="157.0" styleClass="backgroundColor">
          <children>
@@ -37,7 +37,7 @@
                      </font>
                   </Text>
                   <FontAwesomeIcon fill="WHITE" glyphName="BARS" layoutX="113.0" layoutY="36.0" size="2em" text="" wrappingWidth="19.199951171875" />
-                  <Button layoutX="8.0" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="130.0" styleClass="backgroundColor" text="Vietnamese" textFill="WHITE" />
+                  <Button layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="154.0" styleClass="backgroundColor" text="Vietnamese" textFill="WHITE" />
                   <FontAwesomeIcon fill="#90ffbd" glyphName="BOOK" layoutX="14.0" layoutY="145.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="26.285712242126465" />
                </children>
             </AnchorPane>
@@ -49,19 +49,8 @@
                      </font>
                   </Text>
                   <Separator layoutX="13.0" layoutY="34.0" opacity="0.63" prefHeight="16.0" prefWidth="120.0" />
-                  <HBox alignment="CENTER_LEFT" layoutY="42.0" mouseTransparent="true" prefHeight="40.0" prefWidth="146.0">
-                     <children>
-                        <FontAwesomeIcon fill="WHITE" glyphName="LANGUAGE" size="2em" text="" wrappingWidth="26.285712242126465" />
-                        <Text fill="WHITE" fontSmoothingType="LCD" stroke="#ff1515" strokeType="OUTSIDE" strokeWidth="0.0" text="Google" textAlignment="CENTER" wrappingWidth="71.3101806640625">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </HBox>
+                  <Button contentDisplay="BOTTOM" layoutY="50.0" mnemonicParsing="false" onMouseClicked="#clickedTranslateAPI" prefHeight="34.0" prefWidth="154.0" styleClass="backgroundColor" text="TranslateAPI" textFill="WHITE" />
+                  <FontAwesomeIcon fill="WHITE" glyphName="LANGUAGE" layoutX="14.0" layoutY="77.0" size="2em" text="" wrappingWidth="26.285712242126465" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="196.0" prefWidth="146.0">
@@ -72,7 +61,7 @@
                      </font>
                   </Text>
                   <Separator layoutX="13.0" layoutY="26.0" opacity="0.63" prefHeight="16.0" prefWidth="120.0" />
-                  <Button contentDisplay="BOTTOM" layoutX="6.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarMyWord" prefHeight="34.0" prefWidth="130.0" styleClass="backgroundColor" text="My word" textFill="WHITE" />
+                  <Button contentDisplay="BOTTOM" layoutX="-1.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarMyWord" prefHeight="34.0" prefWidth="153.0" styleClass="backgroundColor" text="My word" textFill="WHITE" />
                   <FontAwesomeIcon fill="#d1d1d1" glyphName="DATABASE" layoutX="13.0" layoutY="74.0" size="2em" />
                </children>
             </AnchorPane>

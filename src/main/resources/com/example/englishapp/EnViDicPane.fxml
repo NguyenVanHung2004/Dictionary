@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.web.WebView?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.EnViDicController">
+    <children>
+        <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" prefHeight="40.0" prefWidth="269.0" promptText="Search here" />
+        <FontAwesomeIcon fx:id="searchButton" glyphName="SEARCH" layoutX="299.0" layoutY="45.0" size="2em" text="" wrappingWidth="19.199951171875" />
+        <ListView fx:id="searchList" layoutX="21.0" layoutY="67.0" prefHeight="433.0" prefWidth="186.0" />
+        <WebView fx:id="webView" layoutX="207.0" layoutY="67.0" prefHeight="433.0" prefWidth="437.0" />
+        <Button fx:id="addButton" layoutX="403.0" layoutY="15.0" mnemonicParsing="false" onAction="#addButtonClicked" prefHeight="40.0" prefWidth="75.0" text="Add" />
+    </children>
+</Pane>

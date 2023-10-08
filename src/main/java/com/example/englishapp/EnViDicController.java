@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -29,7 +28,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class VietnameseController implements Initializable {
+public class EnViDicController implements Initializable {
 
   @FXML private TextField keyWordField;
   @FXML ListView<String> searchList;
@@ -80,7 +79,7 @@ public class VietnameseController implements Initializable {
       }
 
     } catch (SQLException e) {
-      Logger.getLogger(SearchScreenController.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
     }
   }
 
