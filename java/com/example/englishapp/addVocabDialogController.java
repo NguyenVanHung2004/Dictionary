@@ -32,7 +32,7 @@ public class addVocabDialogController implements Initializable {
       wordTextField.setText(MyVocabularyController.selectedWord);
       definitonTextArea.setText(MyVocabularyController.selectedDefinition);
     }else{
-      wordTextField.setText(VietnameseController.selectedWord);
+      wordTextField.setText(EnViDicController.selectedWord);
     }
   }
 

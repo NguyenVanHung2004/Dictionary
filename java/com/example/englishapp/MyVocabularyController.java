@@ -13,7 +13,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.w3c.dom.events.Event;
 
 import java.io.IOException;
 import java.sql.*;
@@ -56,7 +55,7 @@ public class MyVocabularyController implements Initializable {
       definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
       myDicTableView.setItems(myVocabObservableList);
     } catch (SQLException e) {
-      Logger.getLogger(SearchScreenController.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
     }
   }
 
@@ -120,7 +119,7 @@ public class MyVocabularyController implements Initializable {
       definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
       myDicTableView.setItems(myVocabObservableList);
     } catch (SQLException e) {
-      Logger.getLogger(SearchScreenController.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
     }
   }
 }
