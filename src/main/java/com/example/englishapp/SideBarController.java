@@ -3,6 +3,7 @@ package com.example.englishapp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,8 +30,13 @@ public class SideBarController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
+
+    Task<Void> task= new Task<>() {
+      @Override
+      protected Void call() throws Exception {
     DatabaseConnection connectNow = new DatabaseConnection();
     Connection connectDB = connectNow.getDatabaseConnection();
+
     String query = "SELECT target,definition FROM dictionary;";
     try {
       Statement statement = connectDB.createStatement();
@@ -43,8 +49,11 @@ public class SideBarController implements Initializable {
       Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
     }
     EnViDicController.vocabModelObservableList = vocabModelObservableList;
-  }
-
+    return null;
+  };
+    };
+    new Thread(task).start();
+}
   @FXML
   public void clickedSideBarMyWord(MouseEvent event) throws IOException {
     Parent newPane =
