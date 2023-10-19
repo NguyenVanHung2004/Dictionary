@@ -10,7 +10,7 @@
      requires jlfgr;
      requires freetts.jsapi10;
      requires freetts;
-
+    requires jfoenix;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires java.sql;
@@ -18,6 +18,9 @@
      requires json.simple;
      requires gtranslateapi;
      requires jsapi;
+     requires java.net.http;
+     requires java.desktop;
+     requires AnimateFX;
      opens com.example.englishapp to javafx.fxml;
     exports com.example.englishapp;
 }

@@ -86,7 +86,7 @@ public class EnViDicController implements Initializable {
   public void addButtonClicked() throws IOException {
     addVocabDialogController.type = "Add";
     Parent parent =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("addVocabDialog.fxml")));
+        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("add_vocab_dialog.fxml")));
     Scene scene = new Scene(parent);
     Stage stage = new Stage();
     stage.setScene(scene);

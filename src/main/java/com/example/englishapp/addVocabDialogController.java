@@ -1,21 +1,33 @@
 package com.example.englishapp;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class addVocabDialogController implements Initializable {
+public class addVocabDialogController  implements Initializable {
   @FXML TextField wordTextField;
   @FXML TextArea definitonTextArea;
   @FXML Button okButton;
   @FXML Label titleLabel;
+  @FXML
+  Pane root;
   String myWord;
   String myDefinition;
   DatabaseConnection databaseConnection = null;
@@ -23,7 +35,7 @@ public class addVocabDialogController implements Initializable {
   public static String type;
 
   @Override
-  public void initialize(URL url, ResourceBundle resource) {
+  public void initialize(URL url, ResourceBundle resource)  {
 
     databaseConnection = new DatabaseConnection();
     connection = databaseConnection.getDatabaseConnection();
@@ -35,7 +47,6 @@ public class addVocabDialogController implements Initializable {
       wordTextField.setText(EnViDicController.selectedWord);
     }
   }
-
 
   public void buttonClicked() throws SQLException {
     myWord = wordTextField.getText();
@@ -52,9 +63,16 @@ public class addVocabDialogController implements Initializable {
     } else if (type.equals("Add")) {
       Add();
     }
-    Stage stage = (Stage) okButton.getScene().getWindow();
-    stage.close();
-
+    close();
+  }
+  private void close(){
+    Stage stage = (Stage) (root.getScene().getWindow());
+    try {
+      Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SideBar.fxml")));
+      stage.setScene(new Scene(root));
+    } catch(IOException ioe) {
+      ioe.printStackTrace();
+    }
   }
 
   private void Add() throws SQLException {

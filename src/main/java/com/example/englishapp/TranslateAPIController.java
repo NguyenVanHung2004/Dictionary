@@ -1,6 +1,5 @@
 package com.example.englishapp;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -10,17 +9,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+
 import org.json.simple.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import java.net.URL;
-import java.util.*;
-import javax.speech.Central;
 
-import javax.speech.synthesis.Synthesizer;
-import javax.speech.synthesis.SynthesizerModeDesc;
+import java.util.*;
+
+import javax.sound.sampled.*;
 
 public class TranslateAPIController implements Initializable {
   @FXML TextArea inputSentence;
@@ -33,11 +31,13 @@ public class TranslateAPIController implements Initializable {
       FXCollections.observableArrayList();
   private final Map<String, String> mapCountries = new LinkedHashMap<>();
   ApiConnection apiConnection;
+
   @Override
   public void initialize(URL url, ResourceBundle resource) {
     inputSentence.setWrapText(true);
     outputSentence.setWrapText(true);
-    System.setProperty("freetts.voices","com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+    System.setProperty(
+        "freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
     try {
       File countriesTxt =
           new File(
@@ -51,6 +51,7 @@ public class TranslateAPIController implements Initializable {
     }
     String apiUrl = "https://api.mymemory.translated.net/get?q=";
     apiConnection = new ApiConnection(apiUrl);
+
     countriesObservableList.addAll(mapCountries.values());
     choiceBoxTranslateFrom.setItems(countriesObservableList);
     choiceBoxTranslateTo.setItems(countriesObservableList);
@@ -60,26 +61,25 @@ public class TranslateAPIController implements Initializable {
 
   @FXML
   private void translateButtonOnClick() {
-    Task<Void> task= new Task<>() {
-      @Override
-      protected Void call() throws Exception {
-        String input = inputSentence.getText();
-        String translateFrom = getChoiceBoxTranslateFrom().getValue();
-        String translateTo = getChoiceBoxTranslateTo().getValue();
-        JSONObject jsonObject =
-                apiConnection.getJSONObject(input + "&langpair=" + translateFrom + "|" + translateTo);
-        JSONObject responseData = (JSONObject) jsonObject.get("responseData");
-        String myDef = responseData.get("translatedText").toString();
-        System.out.println(myDef);
-        outputSentence.setText(myDef);
-        return null;
-      }
-
-    };
+    Task<Void> task =
+        new Task<>() {
+          @Override
+          protected Void call() throws Exception {
+            String input = inputSentence.getText();
+            String translateFrom = getChoiceBoxTranslateFrom().getValue();
+            String translateTo = getChoiceBoxTranslateTo().getValue();
+            JSONObject jsonObject =
+                apiConnection.getJSONObject(
+                    input + "&langpair=" + translateFrom + "|" + translateTo);
+            JSONObject responseData = (JSONObject) jsonObject.get("responseData");
+            String myDef = responseData.get("translatedText").toString();
+            System.out.println(myDef);
+            outputSentence.setText(myDef);
+            return null;
+          }
+        };
     new Thread(task).start();
-
   }
-
 
   public ChoiceBox<String> getChoiceBoxTranslateFrom() {
     return choiceBoxTranslateFrom;
@@ -88,41 +88,71 @@ public class TranslateAPIController implements Initializable {
   public ChoiceBox<String> getChoiceBoxTranslateTo() {
     return choiceBoxTranslateTo;
   }
-  void textToSpeech(String text )  {
 
-    try {
-      Central.registerEngineCentral(
-              "com.sun.speech.freetts"
-                      + ".jsapi.FreeTTSEngineCentral");
-      Synthesizer synthesizer
-              = Central.createSynthesizer(
-              new SynthesizerModeDesc(Locale.US));
+  void textToSpeech(String text, String language)
+      throws IOException, InterruptedException, LineUnavailableException {
+    Task<Void> task =
+        new Task<>() {
+          @Override
+          protected Void call() throws Exception {
+            try {
+              String key = "c841bc4b9efd47f2a46f5b673be3984b";
 
-      synthesizer.allocate();
+              String voice = "Linda";
+              String outputformat = "WAV";
+              String query = text.replace(" ", "%20");
+              String url =
+                  "https://api.voicerss.org/?key="
+                      + key
+                      + "&hl="
+                      + language
+                      + "&c="
+                      + outputformat
+                      + "&src="
+                      + query;
+              HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+              connection.setRequestMethod("GET");
+              InputStream is = connection.getInputStream();
+              InputStream bufferedIn = new BufferedInputStream(is);
+              AudioInputStream ais = AudioSystem.getAudioInputStream(bufferedIn);
 
-      synthesizer.resume();
+              AudioFormat format = ais.getFormat();
+              DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+              SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
+              source.open(format);
 
-      synthesizer.speakPlainText(
-              text, null);
-      synthesizer.waitEngineState(
-              Synthesizer.QUEUE_EMPTY);
+              source.start();
 
-    }
+              int read;
+              byte[] buffer = new byte[1024];
+              while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
+                source.write(buffer, 0, read);
+              }
 
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+              source.close();
+              ais.close();
+              is.close();
+
+              // Hiển thị thông báo thành công
+              System.out.println("Text-to-speech conversion and playback completed.");
+            } catch (Exception e) {
+              // Hiển thị thông báo lỗi
+              System.out.println(
+                  "Text-to-speech conversion and playback failed: " + e.getMessage());
+            }
+            return null;
+          }
+        };
+      new Thread(task).start();
   }
-
 
   @FXML
-  void speechOutput() {
-    textToSpeech(outputSentence.getText() );
+  void speechOutput() throws IOException, InterruptedException, LineUnavailableException {
+    textToSpeech(outputSentence.getText() ,  "vi-vn");
   }
+
   @FXML
-  void speechInput() {
-    textToSpeech(inputSentence.getText() );
+  void speechInput() throws IOException, InterruptedException, LineUnavailableException {
+    textToSpeech(inputSentence.getText(),"en-us");
   }
-
-
 }
