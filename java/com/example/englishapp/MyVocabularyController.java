@@ -12,8 +12,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXDrawersStack;
 import java.io.IOException;
 import java.sql.*;
 import java.net.URL;
@@ -31,6 +35,9 @@ public class MyVocabularyController implements Initializable {
   @FXML Button updateButton;
   @FXML Button deleteButton;
   @FXML Button addButton;
+  @FXML StackPane root;
+
+  private Pane dialog;
   ObservableList<VocabModel> myVocabObservableList = FXCollections.observableArrayList();
   public static String selectedWord;
   public static String selectedDefinition;
@@ -61,25 +68,18 @@ public class MyVocabularyController implements Initializable {
 
   @FXML
   private void addButtonClicked() throws IOException {
+
     addVocabDialogController.type = "Add";
-    Parent parent =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("addVocabDialog.fxml")));
-    Scene scene = new Scene(parent);
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.showAndWait();
-    refresh();
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("add_vocab_dialog.fxml")));
+    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
+
   }
 
   @FXML
   private void updateButtonClicked() throws IOException {
     addVocabDialogController.type = "Update";
-    Parent parent =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("addVocabDialog.fxml")));
-    Scene scene = new Scene(parent);
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.showAndWait();
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("add_vocab_dialog.fxml")));
+    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
     refresh();
   }
 

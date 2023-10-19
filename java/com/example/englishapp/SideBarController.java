@@ -1,5 +1,6 @@
 package com.example.englishapp;
 
+import com.jfoenix.controls.JFXDialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +23,8 @@ import java.sql.*;
 
 import java.util.Objects;
 import java.util.ResourceBundle;
+import animatefx.animation.Bounce;
+import javafx.stage.Stage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,54 +32,103 @@ import java.util.logging.Logger;
 public class SideBarController implements Initializable {
 
   @FXML StackPane contentArea;
-
+  private Pane myWordPane ;
+  private Pane EnViDicPane ;
+  private Pane transApiPane;
+  private Pane animationPane;
+  private WebView webViewPane;
   ObservableList<String> vocabModelObservableList = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
 
-    Task<Void> task= new Task<>() {
-      @Override
-      protected Void call() throws Exception {
-    DatabaseConnection connectNow = new DatabaseConnection();
-    Connection connectDB = connectNow.getDatabaseConnection();
-
-    String query = "SELECT target,definition FROM dictionary;";
     try {
-      Statement statement = connectDB.createStatement();
-      ResultSet queryOutput = statement.executeQuery(query);
-      while (queryOutput.next()) {
-        String myWord = queryOutput.getString("target");
-        vocabModelObservableList.add(myWord);
-      }
-    } catch (SQLException e) {
-      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
+      animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loading_animation.fxml")));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
-    EnViDicController.vocabModelObservableList = vocabModelObservableList;
-    return null;
-  };
-    };
+    new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT).show();
+    Task<Void> task =
+            new Task<>() {
+              @Override
+              protected Void call() throws Exception {
+
+                DatabaseConnection connectNow = new DatabaseConnection();
+                Connection connectDB = connectNow.getDatabaseConnection();
+
+                String query = "SELECT target,definition FROM dictionary;";
+                try {
+                  Statement statement = connectDB.createStatement();
+                  ResultSet queryOutput = statement.executeQuery(query);
+                  while (queryOutput.next()) {
+                    String myWord = queryOutput.getString("target");
+                    vocabModelObservableList.add(myWord);
+                  }
+                } catch (SQLException e) {
+                  Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
+                }
+                EnViDicController.vocabModelObservableList = vocabModelObservableList;
+
+                return null;
+              }
+              @Override
+              protected void succeeded() {
+                super.succeeded();
+                try {
+                  myWordPane =
+                          FXMLLoader.load(
+                                  Objects.requireNonNull(getClass().getResource("myVocabulary.fxml")));
+                  new JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
+                  EnViDicPane =
+                          FXMLLoader.load(Objects.requireNonNull(getClass().getResource("EnviDicPane.fxml")));
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              }
+            };
     new Thread(task).start();
-}
+    try {
+      animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loading_animation.fxml")));
+      new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT).show();
+      myWordPane =
+             FXMLLoader.load(Objects.requireNonNull(getClass().getResource("myVocabulary.fxml")));
+    EnViDicPane =
+            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("EnviDicPane.fxml")));
+    transApiPane =
+            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("TranslateAPI.fxml")));
+    webViewPane =
+              FXMLLoader.load(Objects.requireNonNull(getClass().getResource("WebView.fxml")));
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+
+  }
+
   @FXML
   public void clickedSideBarMyWord(MouseEvent event) throws IOException {
-    Parent newPane =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("myVocabulary.fxml")));
-    contentArea.getChildren().removeAll();
-    contentArea.getChildren().setAll(newPane);
-  }
 
+    new JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
+  }
+  @FXML
   public void clickedSideBarVietnamese(MouseEvent event) throws IOException {
-    Parent newPane =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("EnViDicPane.fxml")));
-    contentArea.getChildren().removeAll();
-    contentArea.getChildren().setAll(newPane);
+    new JFXDialog(contentArea, EnViDicPane , JFXDialog.DialogTransition.LEFT).show();
   }
-
+  @FXML
   public void clickedTranslateAPI(MouseEvent event) throws IOException {
-    Parent newPane =
-        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("TranslateAPI.fxml")));
+    new JFXDialog(contentArea, transApiPane, JFXDialog.DialogTransition.LEFT).show();
+
+  }
+  public void clickedSideBarEnglish(MouseEvent event) {
+
     contentArea.getChildren().removeAll();
-    contentArea.getChildren().setAll(newPane);
+    contentArea.getChildren().setAll(webViewPane);
+  }
+  public void clickedSideBarLogOut(MouseEvent event) {
+
+    Stage stage = (Stage) contentArea.getScene().getWindow();
+    stage.close();
+
   }
 }

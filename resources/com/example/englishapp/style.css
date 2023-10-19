@@ -1,3 +1,82 @@
+.sidebar-backgroundColor{
+       -fx-border-radius :20 0 0 20;
+       -fx-background-radius:20 0 0 20;
+    -fx-background-color: linear-gradient(#8579C6, #EE8282);
+
+}
+.button{
+    -fx-background-color : linear-gradient(#555392, #E34A4A );
+    -fx-opacity : 0.8;
+    -fx-background-radius: 15;
+}
+.parent-style{
+       -fx-border-radius :30;
+       -fx-background-radius: 30;
+}
+.button:hover{
+          -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+           -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+           -fx-background-radius: 15px, 15px, 15px, 15px;
+           -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
+           -fx-text-fill: -fx-text-base-color;
+           -fx-alignment: CENTER;
+           -fx-content-display: LEFT;
+}
+.searchBar{
+    -fx-background-radius : 30;
+    -fx-border-color : #5F5F89;
+   -fx-border-width : 5 ;
+   -fx-border-radius: 30;
+}
+.listview{
+    -fx-border-radius : 5;
+    -fx-border-color : #5F5F89;
+    -fx-background-radius : 5;
+}
+.add-button{
+     -fx-background-color: linear-gradient(#92EDA6, #9ED2A9);
+     -fx-border-width : 2;
+     -fx-border-color: #C8EAF4;
+     -fx-border-radius : 10;
+      -fx-background-radius : 10;
+
+}
+.delete-button{
+    -fx-background-color: linear-gradient(#DB5D5D, #F47575);
+    -fx-border-width : 2;
+         -fx-border-color: #C8EAF4;
+          -fx-background-radius : 10;
+              -fx-border-radius : 10;
+}
+.update-button{
+    -fx-background-color: linear-gradient(#B18484, #E4D121);
+        -fx-border-width : 2;
+             -fx-border-color: #C8EAF4;
+               -fx-background-radius : 10;
+    -fx-border-radius : 10;
+}
 .backgroundColor{
-    -fx-background-color: linear-gradient( to bottom , #1CB5E0, #000046)
+    -fx-background-color : linear-gradient(#FEBDBD, #CFEEFF );
+           -fx-border-radius :0 20 20 0;
+           -fx-border-radius :0 20 20 0;
+
+}
+.table-view{
+    -fx-background-color : #FFDADA;
+    -fx-border-radius : 20;
+}
+.text-area {
+    -fx-background-radius : 10;
+    -fx-background-color : #F7E8E8;
+    -fx-border-radius : 10;
+    -fx-border-width : 1;
+    -fx-border-color : #D15B5B;
+}
+.choice-box{
+        -fx-background-radius : 10;
+        -fx-background-color : #F7E8E8;
+        -fx-border-radius : 10;
+        -fx-border-width : 1;
+        -fx-border-color : #6BDCEC ;
+
 }
