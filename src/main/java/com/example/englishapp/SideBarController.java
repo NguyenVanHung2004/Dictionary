@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -36,7 +37,9 @@ public class SideBarController implements Initializable {
   private Pane EnViDicPane ;
   private Pane transApiPane;
   private Pane animationPane;
+  private Pane quizzPane;
   private WebView webViewPane;
+  private Scene scene;
   ObservableList<String> vocabModelObservableList = FXCollections.observableArrayList();
 
   @Override
@@ -47,7 +50,9 @@ public class SideBarController implements Initializable {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+
     new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT).show();
+
     Task<Void> task =
             new Task<>() {
               @Override
@@ -77,10 +82,10 @@ public class SideBarController implements Initializable {
                 try {
                   myWordPane =
                           FXMLLoader.load(
-                                  Objects.requireNonNull(getClass().getResource("myVocabulary.fxml")));
+                                  Objects.requireNonNull(getClass().getResource("my_vocabulary.fxml")));
                   new JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
                   EnViDicPane =
-                          FXMLLoader.load(Objects.requireNonNull(getClass().getResource("EnviDicPane.fxml")));
+                          FXMLLoader.load(Objects.requireNonNull(getClass().getResource("en_vi_dic.fxml")));
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
@@ -91,25 +96,27 @@ public class SideBarController implements Initializable {
       animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loading_animation.fxml")));
       new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT).show();
       myWordPane =
-             FXMLLoader.load(Objects.requireNonNull(getClass().getResource("myVocabulary.fxml")));
-    EnViDicPane =
-            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("EnviDicPane.fxml")));
-    transApiPane =
+             FXMLLoader.load(Objects.requireNonNull(getClass().getResource("my_vocabulary.fxml")));
+      EnViDicPane =
+            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("en_vi_dic.fxml")));
+      transApiPane =
             FXMLLoader.load(Objects.requireNonNull(getClass().getResource("TranslateAPI.fxml")));
-    webViewPane =
+      webViewPane =
               FXMLLoader.load(Objects.requireNonNull(getClass().getResource("WebView.fxml")));
+      quizzPane =
+              FXMLLoader.load(Objects.requireNonNull(getClass().getResource("game_pane.fxml")));
 
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
-
   }
 
   @FXML
   public void clickedSideBarMyWord(MouseEvent event) throws IOException {
 
-    new JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
+    new  JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
+
+
   }
   @FXML
   public void clickedSideBarVietnamese(MouseEvent event) throws IOException {
@@ -121,7 +128,6 @@ public class SideBarController implements Initializable {
 
   }
   public void clickedSideBarEnglish(MouseEvent event) {
-
     contentArea.getChildren().removeAll();
     contentArea.getChildren().setAll(webViewPane);
   }
@@ -129,6 +135,8 @@ public class SideBarController implements Initializable {
 
     Stage stage = (Stage) contentArea.getScene().getWindow();
     stage.close();
-
+  }
+  public void clickedQuizz(MouseEvent event) {
+    new JFXDialog(contentArea, quizzPane, JFXDialog.DialogTransition.LEFT).show();
   }
 }

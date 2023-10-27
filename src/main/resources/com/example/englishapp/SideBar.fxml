@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="parent-style" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SideBarController">
+<HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="840.0" styleClass="parent-style" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.SideBarController">
    <children>
       <VBox prefHeight="500.0" prefWidth="150.0" styleClass="sidebar-backgroundColor" stylesheets="@style.css">
          <children>
@@ -72,10 +72,16 @@
                      </font>
                   </Button>
                   <FontAwesomeIcon fill="WHITE" glyphName="" layoutX="20.0" layoutY="190.0" size="2em" text="" wrappingWidth="26.285712242126465" />
+                  <Button contentDisplay="BOTTOM" layoutY="100.0" mnemonicParsing="false" onMouseClicked="#clickedQuizz" prefHeight="34.0" prefWidth="153.0" text="Game" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <FontAwesomeIcon fill="#fff4f4" glyphName="GAMEPAD" layoutX="13.0" layoutY="125.0" size="2em" wrappingWidth="34.40002489089966" />
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="690.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" styleClass="backgroundColor" stylesheets="@style.css" />
+      <StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@style.css" />
    </children>
 </HBox>

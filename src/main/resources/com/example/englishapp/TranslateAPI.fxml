@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="500.0" prefWidth="650.0" styleClass="backgroundColor" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.TranslateAPIController">
+<AnchorPane prefHeight="500.0" prefWidth="690.0" styleClass="backgroundColor" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.TranslateAPIController">
    <children>
       <TextArea fx:id="inputSentence" layoutX="14.0" layoutY="77.0" prefHeight="235.0" prefWidth="306.0" />
       <TextArea fx:id="outputSentence" layoutX="329.0" layoutY="77.0" prefHeight="235.0" prefWidth="306.0" />

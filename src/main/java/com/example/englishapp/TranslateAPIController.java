@@ -49,9 +49,6 @@ public class TranslateAPIController implements Initializable {
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-    String apiUrl = "https://api.mymemory.translated.net/get?q=";
-    apiConnection = new ApiConnection(apiUrl);
-
     countriesObservableList.addAll(mapCountries.values());
     choiceBoxTranslateFrom.setItems(countriesObservableList);
     choiceBoxTranslateTo.setItems(countriesObservableList);
@@ -68,9 +65,13 @@ public class TranslateAPIController implements Initializable {
             String input = inputSentence.getText();
             String translateFrom = getChoiceBoxTranslateFrom().getValue();
             String translateTo = getChoiceBoxTranslateTo().getValue();
+            String query = input + "&langpair=" + translateFrom + "|" + translateTo ;
+            query = query.replace(" ", "%20");
+            String apiTranslateUrl = "https://api.mymemory.translated.net/get?q=";
+            apiConnection = new ApiConnection(apiTranslateUrl + query);
+
             JSONObject jsonObject =
-                apiConnection.getJSONObject(
-                    input + "&langpair=" + translateFrom + "|" + translateTo);
+                apiConnection.getJSONObject();
             JSONObject responseData = (JSONObject) jsonObject.get("responseData");
             String myDef = responseData.get("translatedText").toString();
             System.out.println(myDef);
@@ -97,11 +98,9 @@ public class TranslateAPIController implements Initializable {
           protected Void call() throws Exception {
             try {
               String key = "c841bc4b9efd47f2a46f5b673be3984b";
-
-              String voice = "Linda";
               String outputformat = "WAV";
               String query = text.replace(" ", "%20");
-              String url =
+              String textToSpeechUrl =
                   "https://api.voicerss.org/?key="
                       + key
                       + "&hl="
@@ -110,30 +109,20 @@ public class TranslateAPIController implements Initializable {
                       + outputformat
                       + "&src="
                       + query;
-              HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-              connection.setRequestMethod("GET");
-              InputStream is = connection.getInputStream();
-              InputStream bufferedIn = new BufferedInputStream(is);
-              AudioInputStream ais = AudioSystem.getAudioInputStream(bufferedIn);
-
+              apiConnection = new ApiConnection(textToSpeechUrl);
+              AudioInputStream ais = apiConnection.getAudioInputStream();
               AudioFormat format = ais.getFormat();
               DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
               SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
               source.open(format);
-
               source.start();
-
               int read;
               byte[] buffer = new byte[1024];
               while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
                 source.write(buffer, 0, read);
               }
-
               source.close();
               ais.close();
-              is.close();
-
-              // Hiển thị thông báo thành công
               System.out.println("Text-to-speech conversion and playback completed.");
             } catch (Exception e) {
               // Hiển thị thông báo lỗi
