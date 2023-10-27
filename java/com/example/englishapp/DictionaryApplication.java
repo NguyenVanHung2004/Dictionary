@@ -13,7 +13,7 @@ public class DictionaryApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(DictionaryApplication.class.getResource("SideBar.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 840, 500);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);

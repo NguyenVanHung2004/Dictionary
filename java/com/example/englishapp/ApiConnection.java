@@ -4,7 +4,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,22 +17,32 @@ import java.util.Scanner;
 
 public class ApiConnection {
   private final String urlString;
-
+  private HttpURLConnection connection;
+  private URL url;
   public ApiConnection(String urlString) {
     this.urlString = urlString;
   }
 
-  public JSONObject getJSONObject(String query) {
+  public void getConnection(){
     try {
-      query = query.replace(" ", "%20");
-      URL url = new URL(urlString + query);
-      System.out.println(query);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.connect();
 
+      System.out.println(urlString);
+      url = new URL(urlString);
+
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("GET");
+      connection.connect();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public JSONObject getJSONObject() {
+    getConnection();
+    try {
       // Check if connect is made
-      int responseCode = conn.getResponseCode();
+      int responseCode = connection.getResponseCode();
 
       if (responseCode != 200) {
         throw new RuntimeException("HttpResponseCode: " + responseCode);
@@ -49,4 +64,17 @@ public class ApiConnection {
     }
     return null;
   }
+  public AudioInputStream getAudioInputStream() throws IOException {
+    getConnection();
+    try {
+    InputStream is = connection.getInputStream();
+    InputStream bufferedIn = new BufferedInputStream(is);
+    AudioInputStream ais = AudioSystem.getAudioInputStream(bufferedIn);
+    return ais;
+  } catch (Exception e) {
+        System.out.println(
+            "Text-to-speech conversion and playback failed: " + e.getMessage());
+  }
+  return null;
+}
 }

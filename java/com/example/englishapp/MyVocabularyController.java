@@ -2,11 +2,10 @@ package com.example.englishapp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,10 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXDrawersStack;
+
+import javax.sound.sampled.*;
 import java.io.IOException;
 import java.sql.*;
 import java.net.URL;
@@ -69,23 +67,24 @@ public class MyVocabularyController implements Initializable {
   @FXML
   private void addButtonClicked() throws IOException {
 
-    addVocabDialogController.type = "Add";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("add_vocab_dialog.fxml")));
-    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
-
+    DialogController.type = "Add";
+    DialogController.databaseName = "mydictionary";
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP).show();
   }
 
   @FXML
   private void updateButtonClicked() throws IOException {
-    addVocabDialogController.type = "Update";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("add_vocab_dialog.fxml")));
-    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
+    DialogController.type = "Update";
+    DialogController.databaseName = "mydictionary";
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP).show();
     refresh();
   }
 
   @FXML
   private void deleteButtonClicked() throws IOException, SQLException {
-    String query = "DELETE FROM mydictionary WHERE english = ? AND vietnamese = ? " ;
+    String query = "DELETE FROM mydictionary WHERE english = ? AND vietnamese = ? ";
     PreparedStatement preparedStatement = connection.prepareStatement(query);
     preparedStatement.setString(1, selectedWord);
     preparedStatement.setString(2, selectedDefinition);
@@ -102,10 +101,54 @@ public class MyVocabularyController implements Initializable {
     System.out.println(selectedWord);
   }
 
-   public void refresh() {
+  public void speech() {
+    Task<Void> task =
+        new Task<>() {
+          @Override
+          protected Void call() throws Exception {
+            try {
+              String key = "c841bc4b9efd47f2a46f5b673be3984b";
+              String outputformat = "WAV";
+              String query = selectedWord.replace(" ", "%20");
+              String textToSpeechUrl =
+                  "https://api.voicerss.org/?key="
+                      + key
+                      + "&hl="
+                      + "en-gb"
+                      + "&c="
+                      + outputformat
+                      + "&src="
+                      + query;
+              ApiConnection apiConnection = new ApiConnection(textToSpeechUrl);
+              AudioInputStream ais = apiConnection.getAudioInputStream();
+              AudioFormat format = ais.getFormat();
+              DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+              SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
+              source.open(format);
+              source.start();
+              int read;
+              byte[] buffer = new byte[1024];
+              while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
+                source.write(buffer, 0, read);
+              }
+              source.close();
+              ais.close();
+              System.out.println("Text-to-speech conversion and playback completed.");
+            } catch (Exception e) {
+              // Hiển thị thông báo lỗi
+              System.out.println(
+                  "Text-to-speech conversion and playback failed: " + e.getMessage());
+            }
+            return null;
+          }
+        };
+    new Thread(task).start();
+  }
+
+  public void refresh() {
     databaseConnection = new DatabaseConnection();
     connection = databaseConnection.getDatabaseConnection();
-     myVocabObservableList.clear();
+    myVocabObservableList.clear();
     String query = "SELECT english,vietnamese FROM mydictionary;";
     try {
       Statement statement = connection.createStatement();

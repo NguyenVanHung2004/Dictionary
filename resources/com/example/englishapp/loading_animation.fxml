@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="500.0" prefWidth="650.0" styleClass="backgroundColor" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.LoadingAnimationController">
+<AnchorPane prefHeight="500.0" prefWidth="650.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.LoadingAnimationController">
     <children>
         <HBox layoutX="247.0" layoutY="215.0" spacing="20.0">
             <children>
