@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.MyVocabularyController">
+<StackPane fx:id="root" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.MyDictionaryController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" styleClass="backgroundColor" stylesheets="@style.css">
          <children>

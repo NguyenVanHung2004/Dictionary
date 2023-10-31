@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="690.0" styleClass="backgroundColor" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.englishapp.TranslateAPIController">
    <children>
-      <TextArea fx:id="inputSentence" layoutX="14.0" layoutY="77.0" prefHeight="235.0" prefWidth="306.0" />
+      <TextArea fx:id="inputSentence" layoutX="14.0" layoutY="77.0" onKeyReleased="#onKeyReleased" prefHeight="235.0" prefWidth="306.0" />
       <TextArea fx:id="outputSentence" layoutX="329.0" layoutY="77.0" prefHeight="235.0" prefWidth="306.0" />
       <Button fx:id="translateButton" layoutX="148.0" layoutY="352.0" mnemonicParsing="false" onAction="#translateButtonOnClick" prefHeight="34.0" prefWidth="354.0" styleClass="add-button" stylesheets="@style.css" text="TRANSLATE" />
       <ChoiceBox fx:id="choiceBoxTranslateFrom" layoutX="189.0" layoutY="37.0" prefHeight="25.0" prefWidth="130.0" stylesheets="@style.css" />

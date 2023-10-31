@@ -5,7 +5,7 @@
 }
 .button{
     -fx-background-color : linear-gradient(#555392, #E34A4A );
-    -fx-opacity : 0.8;
+
     -fx-background-radius: 15;
 }
 .parent-style{
@@ -13,13 +13,16 @@
        -fx-background-radius: 30;
 }
 .button:hover{
-          -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+           -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
            -fx-background-insets: 0 0 -1 0, 0, 1, 2;
            -fx-background-radius: 15px, 15px, 15px, 15px;
            -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
            -fx-text-fill: -fx-text-base-color;
            -fx-alignment: CENTER;
            -fx-content-display: LEFT;
+}
+.button:disable{
+    -fx-opacity :0.5;
 }
 .searchBar{
     -fx-background-radius : 30;
@@ -103,4 +106,11 @@
     -fx-background-color: #1dbbdd11;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
+}
+.question-label{
+    -fx-background-color : 	#99FFFF;
+    -fx-background-radius : 20 ;
+    -fx-border-radius : 20 ;
+    -fx-border-width : 1;
+    -fx-border-color : #D15B5B;
 }

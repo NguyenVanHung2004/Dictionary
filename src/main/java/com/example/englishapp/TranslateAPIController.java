@@ -1,5 +1,8 @@
 package com.example.englishapp;
 
+import com.example.englishapp.ApiConnection;
+import com.example.englishapp.TextToSpeechAPI;
+import com.example.englishapp.TranslateAPI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,8 +39,9 @@ public class TranslateAPIController implements Initializable {
   public void initialize(URL url, ResourceBundle resource) {
     inputSentence.setWrapText(true);
     outputSentence.setWrapText(true);
-    System.setProperty(
-        "freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+    translateButton.setDisable(true);
+
+    System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
     try {
       File countriesTxt =
           new File(
@@ -62,21 +66,18 @@ public class TranslateAPIController implements Initializable {
         new Task<>() {
           @Override
           protected Void call() throws Exception {
+            translateButton.setDisable(true);
             String input = inputSentence.getText();
-            String translateFrom = getChoiceBoxTranslateFrom().getValue();
-            String translateTo = getChoiceBoxTranslateTo().getValue();
-            String query = input + "&langpair=" + translateFrom + "|" + translateTo ;
-            query = query.replace(" ", "%20");
-            String apiTranslateUrl = "https://api.mymemory.translated.net/get?q=";
-            apiConnection = new ApiConnection(apiTranslateUrl + query);
-
-            JSONObject jsonObject =
-                apiConnection.getJSONObject();
-            JSONObject responseData = (JSONObject) jsonObject.get("responseData");
-            String myDef = responseData.get("translatedText").toString();
+            TranslateAPI translateAPIConnection = new TranslateAPI();
+            translateAPIConnection.prepareQuery(input);
+            String myDef =  translateAPIConnection.getOutPutString();
             System.out.println(myDef);
             outputSentence.setText(myDef);
             return null;
+          }
+
+          protected void succeeded() {
+            translateButton.setDisable(false);
           }
         };
     new Thread(task).start();
@@ -97,33 +98,9 @@ public class TranslateAPIController implements Initializable {
           @Override
           protected Void call() throws Exception {
             try {
-              String key = "c841bc4b9efd47f2a46f5b673be3984b";
-              String outputformat = "WAV";
-              String query = text.replace(" ", "%20");
-              String textToSpeechUrl =
-                  "https://api.voicerss.org/?key="
-                      + key
-                      + "&hl="
-                      + language
-                      + "&c="
-                      + outputformat
-                      + "&src="
-                      + query;
-              apiConnection = new ApiConnection(textToSpeechUrl);
-              AudioInputStream ais = apiConnection.getAudioInputStream();
-              AudioFormat format = ais.getFormat();
-              DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-              SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
-              source.open(format);
-              source.start();
-              int read;
-              byte[] buffer = new byte[1024];
-              while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
-                source.write(buffer, 0, read);
-              }
-              source.close();
-              ais.close();
-              System.out.println("Text-to-speech conversion and playback completed.");
+              TextToSpeechAPI textToSpeech = new TextToSpeechAPI();
+              textToSpeech.prepareQuery(text);
+              textToSpeech.Speak();
             } catch (Exception e) {
               // Hiển thị thông báo lỗi
               System.out.println(
@@ -132,16 +109,22 @@ public class TranslateAPIController implements Initializable {
             return null;
           }
         };
-      new Thread(task).start();
+    new Thread(task).start();
   }
 
   @FXML
   void speechOutput() throws IOException, InterruptedException, LineUnavailableException {
-    textToSpeech(outputSentence.getText() ,  "vi-vn");
+    textToSpeech(outputSentence.getText(), "vi-vn");
   }
 
   @FXML
   void speechInput() throws IOException, InterruptedException, LineUnavailableException {
-    textToSpeech(inputSentence.getText(),"en-us");
+    textToSpeech(inputSentence.getText(), "en-us");
+  }
+
+  @FXML
+  void onKeyReleased() {
+    if (!inputSentence.getText().isEmpty()) translateButton.setDisable(false);
+    else translateButton.setDisable(true);
   }
 }

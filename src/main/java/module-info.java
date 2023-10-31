@@ -23,4 +23,5 @@
      requires AnimateFX;
      opens com.example.englishapp to javafx.fxml;
     exports com.example.englishapp;
+
 }
