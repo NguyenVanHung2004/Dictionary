@@ -1,5 +1,8 @@
 package com.example.englishapp;
 
+import com.example.englishapp.DatabaseConnection;
+import com.example.englishapp.TextToSpeechAPI;
+import com.example.englishapp.VocabModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -25,7 +28,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MyVocabularyController implements Initializable {
+public class MyDictionaryController implements Initializable {
   @FXML TextField keyWordField;
   @FXML TableView<VocabModel> myDicTableView;
   @FXML TableColumn<VocabModel, String> wordColumn;
@@ -46,7 +49,8 @@ public class MyVocabularyController implements Initializable {
   public void initialize(URL url, ResourceBundle resource) {
     databaseConnection = new DatabaseConnection();
     connection = databaseConnection.getDatabaseConnection();
-
+    updateButton.setDisable(true);
+    deleteButton.setDisable(true);
     String query = "SELECT english,vietnamese FROM mydictionary;";
     try {
       Statement statement = connection.createStatement();
@@ -96,6 +100,8 @@ public class MyVocabularyController implements Initializable {
   @FXML
   public void clickedTableView() {
     selectedWord = wordColumn.getCellData(myDicTableView.getSelectionModel().getSelectedIndex());
+    updateButton.setDisable(false);
+    deleteButton.setDisable(false);
     selectedDefinition =
         definitionColumn.getCellData(myDicTableView.getSelectionModel().getSelectedIndex());
     System.out.println(selectedWord);
@@ -107,33 +113,9 @@ public class MyVocabularyController implements Initializable {
           @Override
           protected Void call() throws Exception {
             try {
-              String key = "c841bc4b9efd47f2a46f5b673be3984b";
-              String outputformat = "WAV";
-              String query = selectedWord.replace(" ", "%20");
-              String textToSpeechUrl =
-                  "https://api.voicerss.org/?key="
-                      + key
-                      + "&hl="
-                      + "en-gb"
-                      + "&c="
-                      + outputformat
-                      + "&src="
-                      + query;
-              ApiConnection apiConnection = new ApiConnection(textToSpeechUrl);
-              AudioInputStream ais = apiConnection.getAudioInputStream();
-              AudioFormat format = ais.getFormat();
-              DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-              SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
-              source.open(format);
-              source.start();
-              int read;
-              byte[] buffer = new byte[1024];
-              while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
-                source.write(buffer, 0, read);
-              }
-              source.close();
-              ais.close();
-              System.out.println("Text-to-speech conversion and playback completed.");
+              TextToSpeechAPI textToSpeechAPIConnection = new TextToSpeechAPI();
+              textToSpeechAPIConnection.prepareQuery(selectedWord);
+              textToSpeechAPIConnection.Speak();
             } catch (Exception e) {
               // Hiển thị thông báo lỗi
               System.out.println(

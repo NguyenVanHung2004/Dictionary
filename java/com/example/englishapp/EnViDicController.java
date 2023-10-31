@@ -1,5 +1,8 @@
 package com.example.englishapp;
 
+import com.example.englishapp.DatabaseConnection;
+
+import com.example.englishapp.TextToSpeechAPI;
 import com.jfoenix.controls.JFXDialog;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,6 +39,8 @@ public class EnViDicController implements Initializable {
   @FXML ListView<String> searchList;
   @FXML WebView webView;
   @FXML Button addButton;
+  @FXML Button updateButton;
+  @FXML Button deleteButton;
   @FXML
   StackPane root;
 
@@ -47,6 +52,8 @@ public class EnViDicController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resource) {
     searchList.setItems(vocabModelObservableList);
+    updateButton.setDisable(true);
+    deleteButton.setDisable(true);
     FilteredList<String> filteredData = new FilteredList<>(vocabModelObservableList, b -> true);
     keyWordField
         .textProperty()
@@ -67,7 +74,8 @@ public class EnViDicController implements Initializable {
 
   public void clickedColumn(
       ObservableValue<? extends String> observableValue, String old, String newValue) {
-
+    updateButton.setDisable(false);
+    deleteButton.setDisable(false);
     selectedWord = searchList.getSelectionModel().getSelectedItems().toString();
     selectedWord = selectedWord.substring(1, selectedWord.length() - 1);
     DatabaseConnection connectNow = new DatabaseConnection();
@@ -105,46 +113,22 @@ public class EnViDicController implements Initializable {
 
   }
   public void speech(){
-      Task<Void> task =
-              new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                  try {
-                    String key = "c841bc4b9efd47f2a46f5b673be3984b";
-                    String outputformat = "WAV";
-                    String query = selectedWord.replace(" ", "%20");
-                    String textToSpeechUrl =
-                            "https://api.voicerss.org/?key="
-                                    + key
-                                    + "&hl="
-                                    + "en-gb"
-                                    + "&c="
-                                    + outputformat
-                                    + "&src="
-                                    + query;
-                    ApiConnection apiConnection = new ApiConnection(textToSpeechUrl);
-                    AudioInputStream ais = apiConnection.getAudioInputStream();
-                    AudioFormat format = ais.getFormat();
-                    DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-                    SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
-                    source.open(format);
-                    source.start();
-                    int read;
-                    byte[] buffer = new byte[1024];
-                    while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
-                      source.write(buffer, 0, read);
-                    }
-                    source.close();
-                    ais.close();
-                    System.out.println("Text-to-speech conversion and playback completed.");
-                  } catch (Exception e) {
-                    // Hiển thị thông báo lỗi
-                    System.out.println(
-                            "Text-to-speech conversion and playback failed: " + e.getMessage());
-                  }
-                  return null;
-                }
-              };
+    Task<Void> task =
+        new Task<>() {
+          @Override
+          protected Void call() throws Exception {
+            try {
+              TextToSpeechAPI textToSpeechAPIConnection = new TextToSpeechAPI();
+              textToSpeechAPIConnection.prepareQuery(selectedWord);
+              textToSpeechAPIConnection.Speak();
+            } catch (Exception e) {
+              // Hiển thị thông báo lỗi
+              System.out.println(
+                  "Text-to-speech conversion and playback failed: " + e.getMessage());
+            }
+            return null;
+          }
+        };
       new Thread(task).start();
   }
 

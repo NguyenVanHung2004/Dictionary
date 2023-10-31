@@ -1,5 +1,7 @@
 package com.example.englishapp;
 
+import com.example.englishapp.DatabaseConnection;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,7 +29,7 @@ public class DialogController implements Initializable {
   Pane root;
   String myWord;
   String myDefinition;
-  DatabaseConnection databaseConnection = null;
+  public DatabaseConnection databaseConnection = null;
   Connection connection = null;
   public static String type;
   public static String databaseName;
@@ -40,8 +42,8 @@ public class DialogController implements Initializable {
     titleLabel.setText(type);
     if (type.equals("Update")) {
       if( databaseName.equals("mydictionary")){
-        wordTextField.setText(MyVocabularyController.selectedWord);
-        definitonTextArea.setText(MyVocabularyController.selectedDefinition);
+        wordTextField.setText(MyDictionaryController.selectedWord);
+        definitonTextArea.setText(MyDictionaryController.selectedDefinition);
       }else {
         wordTextField.setText(EnViDicController.selectedWord);
 

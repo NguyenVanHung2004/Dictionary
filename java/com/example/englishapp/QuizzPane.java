@@ -1,22 +1,17 @@
 package com.example.englishapp;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.MouseEvent;
 
-import javax.swing.text.View;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class quizzModelPane implements Initializable {
+public class QuizzPane implements Initializable {
   @FXML Label question;
   @FXML Button option1;
   @FXML Button option2;
@@ -55,6 +50,8 @@ public class quizzModelPane implements Initializable {
     option2.setDisable(false);
     option3.setDisable(false);
     option4.setDisable(false);
+    submit.setDisable(true);
+    next.setDisable(true);
 
 
     question.setText(currentQuestion.getQuetion());
@@ -85,6 +82,7 @@ public class quizzModelPane implements Initializable {
   public void clickedOptionOne() {
     selectedAnswer = 1;
     selectedAnswerButton = option1;
+    submit.setDisable(false);
     setDefaultStyle();
     option1.setStyle("-fx-background-color: #00FFFF;");
   }
@@ -93,6 +91,7 @@ public class quizzModelPane implements Initializable {
   public void clickedOptionTwo() {
     selectedAnswer = 2;
     selectedAnswerButton = option2;
+    submit.setDisable(false);
     setDefaultStyle();
     option2.setStyle("-fx-background-color: #00FFFF;");
   }
@@ -101,6 +100,7 @@ public class quizzModelPane implements Initializable {
   public void clickedOptionThree() {
     selectedAnswer = 3;
     selectedAnswerButton = option3;
+    submit.setDisable(false);
     setDefaultStyle();
     option3.setStyle("-fx-background-color: #00FFFF;");
   }
@@ -109,8 +109,10 @@ public class quizzModelPane implements Initializable {
   public void clickedOptionFour() {
     selectedAnswer = 4;
     selectedAnswerButton = option4;
+    submit.setDisable(false);
     setDefaultStyle();
     option4.setStyle("-fx-background-color: #00FFFF;");
+
   }
 
   @FXML
@@ -119,7 +121,8 @@ public class quizzModelPane implements Initializable {
     option2.setDisable(true);
     option3.setDisable(true);
     option4.setDisable(true);
-    selectedAnswerButton.setDisable(false);
+    next.setDisable(false);
+    submit.setDisable(true);
     if (checkAnswer()) {
       myScore++;
       setCorrectStyle();

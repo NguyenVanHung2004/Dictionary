@@ -1,5 +1,6 @@
 package com.example.englishapp;
 
+
 import com.jfoenix.controls.JFXDialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,11 +46,7 @@ public class SideBarController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resource) {
 
-    try {
-      animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loading_animation.fxml")));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+
 
     new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT).show();
 
