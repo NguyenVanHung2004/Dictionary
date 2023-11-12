@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@../style/style.css"  xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.LoadingAnimationController">
+    <children>
+        <HBox layoutX="267.0" layoutY="219.0" spacing="20.0">
+            <children>
+                <Circle fx:id="cir1" fill="#ffffff00" radius="12.0" stroke="#2196f3" strokeType="INSIDE" strokeWidth="6.0" />
+                <Circle fx:id="cir2" fill="#ffffff00" radius="12.0" stroke="#9c27b0" strokeType="INSIDE" strokeWidth="6.0" />
+                <Circle fx:id="cir3" fill="#ffffff00" radius="12.0" stroke="#ff1744" strokeType="INSIDE" strokeWidth="6.0" />
+                <Circle fx:id="cir4" fill="#ffffff00" radius="12.0" stroke="#00c853" strokeType="INSIDE" strokeWidth="6.0" />
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
