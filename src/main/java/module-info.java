@@ -21,7 +21,10 @@
      requires java.net.http;
      requires java.desktop;
      requires AnimateFX;
-     opens com.example.englishapp to javafx.fxml;
-    exports com.example.englishapp;
+     opens com.example.Controllers to javafx.fxml;
+     opens com.example.Models to javafx.base;
+     opens com.example to javafx.fxml;
+     exports com.example.Controllers;
+     exports com.example;
 
 }
