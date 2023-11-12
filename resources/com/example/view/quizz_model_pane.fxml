@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="690.0" stylesheets="@../style/style.css"  xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.QuizzPane">
+   <children>
+      <AnchorPane prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane">
+         <children>
+            <Button fx:id="option1" layoutX="115.0" layoutY="217.0" mnemonicParsing="false" onMouseClicked="#clickedOptionOne" prefHeight="66.0" prefWidth="142.0" styleClass="answer-button" stylesheets="@../style/style.css"  text="Answer 1 ">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <Label fx:id="question" alignment="CENTER" layoutX="67.0" layoutY="74.0" prefHeight="114.0" prefWidth="546.0" styleClass="question-label" stylesheets="@../style/style.css"  text="TH">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+            <Button fx:id="option2" layoutX="404.0" layoutY="217.0" mnemonicParsing="false" onMouseClicked="#clickedOptionTwo" prefHeight="66.0" prefWidth="142.0" styleClass="answer-button" stylesheets="@../style/style.css"  text="Answer 2">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <Button fx:id="submit" layoutX="299.0" layoutY="412.0" mnemonicParsing="false" onMouseClicked="#clickedSubmitButton" prefHeight="33.0" prefWidth="82.0" styleClass="add-button" text="SUBMIT" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <Button fx:id="back" layoutX="24.0" layoutY="21.0" mnemonicParsing="false" onAction="#clickedBackButton" prefHeight="34.0" prefWidth="82.0" styleClass="delete-button" text="Back" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <Button fx:id="next" layoutX="574.0" layoutY="412.0" mnemonicParsing="false" onMouseClicked="#clickedNextButton" prefHeight="33.0" prefWidth="82.0" styleClass="update-button" text="NEXT" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <ProgressBar fx:id="progressBar" layoutX="85.0" layoutY="465.0" prefHeight="9.0" prefWidth="511.0" progress="0.0" />
+            <Label fx:id="myScoreLabel" layoutX="299.0" layoutY="17.0" prefHeight="43.0" prefWidth="82.0" text="SCORE:  " textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="option3" layoutX="115.0" layoutY="328.0" mnemonicParsing="false" onMouseClicked="#clickedOptionThree" prefHeight="66.0" prefWidth="142.0" styleClass="answer-button" stylesheets="@../style/style.css"  text="Answer 3">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="option4" layoutX="404.0" layoutY="328.0" mnemonicParsing="false" onMouseClicked="#clickedOptionFour" prefHeight="66.0" prefWidth="142.0" styleClass="answer-button" stylesheets="@../style/style.css"  text="Answer 4">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Label fx:id="smallLabel" layoutX="613.0" layoutY="460.0" prefHeight="19.0" prefWidth="41.0" text="1 / 20 ">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
