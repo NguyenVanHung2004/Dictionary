@@ -3,20 +3,32 @@ package com.example.Services;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class TranslateAPI extends ApiConnection {
 
   private final String webUrl = "https://api.mymemory.translated.net/get?q=";
   private String inputLanguage = "English";
-  private String outputLanguage = "Vietnamese";
+
+    public void setInputLanguage(String inputLanguage) {
+        this.inputLanguage = inputLanguage;
+    }
+
+    public void setOutputLanguage(String outputLanguage) {
+        this.outputLanguage = outputLanguage;
+    }
+
+    private String outputLanguage = "Vietnamese";
     public TranslateAPI() {
 
     }
 
     @Override
     public void prepareQuery(String query) {
-        query = query.replace(" ", "%20");
+
+        query = URLEncoder.encode(query , StandardCharsets.UTF_8);
         finalQuery = webUrl + query + "&langpair=" + inputLanguage + "|" + outputLanguage;
     }
 

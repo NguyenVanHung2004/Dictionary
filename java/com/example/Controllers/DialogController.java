@@ -72,7 +72,7 @@ public class DialogController implements Initializable {
     Stage stage = (Stage) (root.getScene().getWindow());
 
     try {
-      Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SideBar.fxml")));
+      Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/SideBar.fxml")));
       Scene scene = new Scene(root);
       scene.setFill(Color.TRANSPARENT);
       stage.setScene(scene);
@@ -92,10 +92,8 @@ public class DialogController implements Initializable {
     PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
     preparedStatement.setString(1, myWord);
     preparedStatement.setString(2, myDefinition);
-
     preparedStatement.execute();
     preparedStatement.close();
-
   }
 
   private void update() throws SQLException {
