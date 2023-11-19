@@ -20,16 +20,25 @@ public class GameController {
     @FXML
     StackPane root;
 
-    static JFXDialog jfxDialog;
+    static JFXDialog quizz;
+
     @FXML
     void clickedQuizzButton() throws IOException {
-        Pane quizzModel = FXMLLoader.load(
+        Pane quizzPane = FXMLLoader.load(
                 Objects.requireNonNull(getClass().getResource("/com/example/view/quizz_model_pane.fxml")));
-        jfxDialog=   new JFXDialog(root, quizzModel, JFXDialog.DialogTransition.LEFT );
-        jfxDialog.show();
+        quizz=   new JFXDialog(root, quizzPane, JFXDialog.DialogTransition.LEFT );
+        quizz.show();
   }
+    @FXML
+    void gameTetrisClicked() throws IOException {
+        Pane tetris =
+                FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/game_tetris.fxml")));
+        root.getChildren().removeAll();
+        tetris.requestFocus();
+        root.getChildren().setAll(tetris);
+    }
     public static void closeDialog(){
-        jfxDialog.close();
+        quizz.close();
     }
 
 }

@@ -9,7 +9,7 @@
       <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
             <Button fx:id="quizzButton" layoutX="302.0" layoutY="187.0" mnemonicParsing="false" onMouseClicked="#clickedQuizzButton" prefHeight="42.0" prefWidth="86.0" text="QUIZZ" />
-            <Button layoutX="307.0" layoutY="273.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="71.0" text="Button" />
+            <Button layoutX="302.0" layoutY="276.0" mnemonicParsing="false" onMouseClicked="#gameTetrisClicked" prefHeight="42.0" prefWidth="86.0" text="Terris" />
          </children>
       </Pane>
    </children>

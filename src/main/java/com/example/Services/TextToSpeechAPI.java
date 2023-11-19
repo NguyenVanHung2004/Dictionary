@@ -4,6 +4,8 @@ import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class TextToSpeechAPI extends ApiConnection {
   private final String webUrl = "https://api.voicerss.org/?key=c841bc4b9efd47f2a46f5b673be3984b";
@@ -13,7 +15,7 @@ public class TextToSpeechAPI extends ApiConnection {
 
   @Override
   public void prepareQuery(String query) {
-    query = query.replace(" ", "%20");
+      query = URLEncoder.encode(query , StandardCharsets.UTF_8);
      finalQuery =
             webUrl +  "&hl="
                     + language

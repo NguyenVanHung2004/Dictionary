@@ -73,7 +73,7 @@ public class MyDictionaryController implements Initializable {
 
     DialogController.type = "Add";
     DialogController.databaseName = "mydictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/dialog.fxml")));
     new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP).show();
   }
 
@@ -81,7 +81,7 @@ public class MyDictionaryController implements Initializable {
   private void updateButtonClicked() throws IOException {
     DialogController.type = "Update";
     DialogController.databaseName = "mydictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP).show();
     refresh();
   }

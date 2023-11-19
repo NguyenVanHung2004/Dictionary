@@ -9,16 +9,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class QuizzPane implements Initializable {
+public class QuizzController implements Initializable {
   @FXML Label question;
   @FXML Button option1;
   @FXML Button option2;
@@ -29,8 +29,7 @@ public class QuizzPane implements Initializable {
   @FXML public Button back;
   @FXML public ProgressBar progressBar;
   @FXML public Label myScoreLabel;
-  @FXML
-  Label smallLabel;
+  @FXML Label smallLabel;
   @FXML public StackPane contentArea;
   List<QuizzModel> questionList = new ArrayList<>();
   List<QuizzModel> randomQuestion = new ArrayList<>();
@@ -85,8 +84,8 @@ public class QuizzPane implements Initializable {
   }
 
   @FXML
-  public  void clickedBackButton(){
-      GameController.closeDialog();
+  public void clickedBackButton() {
+    GameController.closeDialog();
   }
 
   @FXML
@@ -154,7 +153,6 @@ public class QuizzPane implements Initializable {
     setQuizz();
   }
 
-
   public boolean checkAnswer() {
     return selectedAnswer == currentQuestion.getCorrectAnswer();
   }
@@ -183,8 +181,12 @@ public class QuizzPane implements Initializable {
   }
 
   public void getDataFromFile() throws IOException {
-    Pane animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/loading_animation.fxml")));
-    JFXDialog jfxDialog =  new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT);
+    Pane animationPane =
+        FXMLLoader.load(
+            Objects.requireNonNull(
+                getClass().getResource("/com/example/view/loading_animation.fxml")));
+    JFXDialog jfxDialog =
+        new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT);
     jfxDialog.show();
     Task<Void> task =
         new Task<>() {
@@ -210,13 +212,15 @@ public class QuizzPane implements Initializable {
             }
             return null;
           }
+
           protected void succeeded() {
             jfxDialog.close();
             Collections.shuffle(questionList);
-            randomQuestion = questionList.subList(0 ,10);
+            randomQuestion = questionList.subList(0, 10);
             setQuizz();
           }
         };
     new Thread(task).start();
   }
-}
+  }
+

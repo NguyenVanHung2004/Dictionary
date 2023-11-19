@@ -24,10 +24,7 @@ import javafx.scene.web.WebView;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -41,12 +38,12 @@ public class EnViDicController implements Initializable {
   @FXML Button addButton;
   @FXML Button updateButton;
   @FXML Button deleteButton;
-  @FXML
-  StackPane root;
+  @FXML StackPane root;
 
   public static ObservableList<String> vocabModelObservableList =
       FXCollections.observableArrayList();
   public static String selectedWord;
+  private String selectedDefinition;
   private Pane dialog;
 
   @Override
@@ -78,13 +75,16 @@ public class EnViDicController implements Initializable {
     deleteButton.setDisable(false);
     selectedWord = searchList.getSelectionModel().getSelectedItems().toString();
     selectedWord = selectedWord.substring(1, selectedWord.length() - 1);
+
     DatabaseConnection connectNow = new DatabaseConnection();
     Connection connectDB = connectNow.getDatabaseConnection();
-    String query = "SELECT definition FROM dictionary " + "WHERE target = '" + selectedWord + "';";
-    System.out.println(query);
+
+    String query = "SELECT definition FROM dictionary WHERE target = ?;";
     try {
-      Statement statement = connectDB.createStatement();
-      ResultSet queryOutput = statement.executeQuery(query);
+      PreparedStatement preparedStatement = connectDB.prepareStatement(query);
+      preparedStatement.setString(1 , selectedWord);
+      System.out.println(query);
+      ResultSet queryOutput = preparedStatement.executeQuery();
       while (queryOutput.next()) {
         String myDefinition = queryOutput.getString("definition");
         WebEngine webEngine = webView.getEngine();
@@ -99,18 +99,24 @@ public class EnViDicController implements Initializable {
   public void addButtonClicked() throws IOException {
     DialogController.type = "Add";
     DialogController.databaseName = "dictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
 
   }
   public void updateButtonClicked() throws IOException {
     DialogController.type = "Update";
     DialogController.databaseName = "dictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dialog.fxml")));
+    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
   }
-  public void deleteButtonClicked(){
-
+  public void deleteButtonClicked() throws SQLException {
+    DatabaseConnection databaseConnection = new DatabaseConnection();
+    Connection connection = databaseConnection.getDatabaseConnection();
+    String query = "DELETE FROM dictionary WHERE target = ? ; " ;
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+    preparedStatement.setString(1, selectedWord);
+    preparedStatement.execute();
+    preparedStatement.close();
   }
   public void speech(){
     Task<Void> task =

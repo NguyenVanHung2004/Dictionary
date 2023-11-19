@@ -69,6 +69,8 @@ public class TranslateAPIController implements Initializable {
             translateButton.setDisable(true);
             String input = inputSentence.getText();
             TranslateAPI translateAPIConnection = new TranslateAPI();
+            translateAPIConnection.setInputLanguage(getChoiceBoxTranslateFrom().getValue());
+            translateAPIConnection.setOutputLanguage(getChoiceBoxTranslateTo().getValue());
             translateAPIConnection.prepareQuery(input);
             String myDef =  translateAPIConnection.getOutPutString();
             System.out.println(myDef);

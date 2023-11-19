@@ -36,9 +36,14 @@ public class SideBarController implements Initializable {
   private Pane EnViDicPane ;
   private Pane transApiPane;
   private Pane animationPane;
-  private Pane gamePane;
+
   private WebView webViewPane;
-  private Scene scene;
+  private JFXDialog jfxDialogMyWord;
+  private JFXDialog jfxDialogEnViDic;
+  private JFXDialog jfxDialogTransAPI;
+  private JFXDialog jfxDialogVietnamese;
+  private JFXDialog jfxDialogGame;
+
   ObservableList<String> vocabModelObservableList = FXCollections.observableArrayList();
 
   @Override
@@ -104,30 +109,58 @@ public class SideBarController implements Initializable {
 
   @FXML
   public void clickedSideBarMyWord(MouseEvent event) throws IOException {
-
-    new  JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT).show();
+    closeAll();
+    jfxDialogMyWord =
+    new  JFXDialog(contentArea, myWordPane, JFXDialog.DialogTransition.LEFT);
+            jfxDialogMyWord.show();
 
   }
+
   @FXML
   public void clickedSideBarVietnamese(MouseEvent event) throws IOException {
-    new JFXDialog(contentArea, EnViDicPane , JFXDialog.DialogTransition.LEFT).show();
+    closeAll();
+    jfxDialogVietnamese =  new JFXDialog(contentArea, EnViDicPane , JFXDialog.DialogTransition.LEFT);
+    jfxDialogVietnamese.show();
   }
   @FXML
   public void clickedTranslateAPI(MouseEvent event) throws IOException {
-    new JFXDialog(contentArea, transApiPane, JFXDialog.DialogTransition.LEFT).show();
+    closeAll();
+    jfxDialogTransAPI = new JFXDialog(contentArea, transApiPane, JFXDialog.DialogTransition.LEFT);
+    jfxDialogTransAPI.show();
 
   }
   public void clickedSideBarEnglish(MouseEvent event) {
+    closeAll();
     contentArea.getChildren().removeAll();
     contentArea.getChildren().setAll(webViewPane);
   }
   public void clickedSideBarLogOut(MouseEvent event) {
-
+    closeAll();
     Stage stage = (Stage) contentArea.getScene().getWindow();
     stage.close();
   }
   public  void clickedGame(MouseEvent event) throws IOException {
+    closeAll();
     Pane game2Pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/game_pane.fxml")));
-    new JFXDialog(contentArea, game2Pane, JFXDialog.DialogTransition.LEFT).show();
+    contentArea.getChildren().removeAll();
+    game2Pane.requestFocus();
+    contentArea.getChildren().setAll(game2Pane);
+    //jfxDialogGame = new  JFXDialog(contentArea, game2Pane, JFXDialog.DialogTransition.LEFT);
+  //  jfxDialogGame.show();
+  }
+  public void closeAll(){
+    if (jfxDialogEnViDic != null)
+      closeJFXDialog(jfxDialogEnViDic);
+    if (jfxDialogTransAPI != null)
+      closeJFXDialog(jfxDialogTransAPI);
+    if (jfxDialogVietnamese != null)
+      closeJFXDialog(jfxDialogVietnamese);
+    if (jfxDialogGame != null)
+      closeJFXDialog(jfxDialogGame);
+    if (jfxDialogMyWord != null)
+      closeJFXDialog(jfxDialogMyWord);
+  }
+  public void closeJFXDialog( JFXDialog jfxDialog){
+    jfxDialog.close();
   }
 }
