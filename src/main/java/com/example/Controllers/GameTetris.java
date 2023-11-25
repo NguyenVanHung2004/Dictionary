@@ -74,16 +74,19 @@ public class GameTetris implements Initializable {
   public static final double acceleration = 0.01;
   private int currentWordIndex;
   private int score;
+  private int heart = 3;
   private int posIndex;
   private int midIndex;
   private char currentLetter;
   private String currentWord;
+
+
   private String imagePath;
   private boolean isLose;
 
   public void loadWordsFromFile() {
 
-    DatabaseConnection connectNow = new DatabaseConnection();
+    DatabaseConnection connectNow = DatabaseConnection.getInstance();
     Connection connectDB = connectNow.getDatabaseConnection();
     String query = "SELECT word FROM entries;";
     try {
@@ -97,8 +100,9 @@ public class GameTetris implements Initializable {
       Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
     }
   }
+
   public void loadWordExplainFromFile() {
-    DatabaseConnection connectNow = new DatabaseConnection();
+    DatabaseConnection connectNow = DatabaseConnection.getInstance();
     Connection connectDB = connectNow.getDatabaseConnection();
     String query = "SELECT definition FROM entries;";
     try {
@@ -123,14 +127,14 @@ public class GameTetris implements Initializable {
     posIndex = midIndex;
     String temp = currentWord;
     List<Character> characters = new ArrayList<>();
-    for(char c:temp.toCharArray()){
+    for (char c : temp.toCharArray()) {
       characters.add(c);
     }
 
     Collections.shuffle(characters);
 
     StringBuilder shuffle = new StringBuilder();
-    for(char c:characters){
+    for (char c : characters) {
       shuffle.append(c);
     }
     suggestionLabel.setText(shuffle.toString());
@@ -143,8 +147,6 @@ public class GameTetris implements Initializable {
     wordExplain.setText(currentWordExplain);
     wordExplainList.remove(currentWordIndex);
   }
-
-
 
   public void displayCurrentLetter() {
     for (int i = 0; i < currentWord.length(); i++) {
@@ -218,7 +220,8 @@ public class GameTetris implements Initializable {
   }
 
   public void moveDown() {
-    letterImageView.setLayoutY(letterImageView.getLayoutY() + 50);
+    if ( !isLose )
+      letterImageView.setLayoutY(letterImageView.getLayoutY() + 50);
   }
 
   @Override
@@ -227,18 +230,25 @@ public class GameTetris implements Initializable {
     isLose = false;
     button.requestFocus();
     button.focusTraversableProperty();
-    button.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-      if (event.getCode() == KeyCode.LEFT) {
-        System.out.println("The 'L' key was pressed");
-        moveLeft();
-        event.consume();
-      }
-      if (event.getCode() == KeyCode.RIGHT) {
-        System.out.println("The 'R' key was pressed");
-        moveRight();
-        event.consume();
-      }
-    });
+    button.addEventFilter(
+        KeyEvent.KEY_PRESSED,
+        event -> {
+          if (event.getCode() == KeyCode.LEFT) {
+            System.out.println("The 'L' key was pressed");
+            moveLeft();
+            event.consume();
+          }
+          if (event.getCode() == KeyCode.RIGHT) {
+            System.out.println("The 'R' key was pressed");
+            moveRight();
+            event.consume();
+          }
+          if (event.getCode() == KeyCode.DOWN) {
+            System.out.println("The 'D' key was pressed");
+            moveDown();
+            event.consume();
+          }
+        });
 
     scoreLabel.setText(String.valueOf(score));
     loadWordsFromFile();
@@ -264,6 +274,10 @@ public class GameTetris implements Initializable {
             new KeyFrame(
                 Duration.seconds(0.017),
                 event -> {
+                  if (heart <= 0){
+                    finishedGame();
+                    return;
+                  }
                   if (checkLetterOnPane()) {
                     letterImageView.setLayoutY(letterImageView.getLayoutY() + velocity);
                     velocity += acceleration;
@@ -280,87 +294,36 @@ public class GameTetris implements Initializable {
                           correctWord();
                         } else {
                           incorrectWord();
-                          return;
+                          heart--;
                         }
                       }
-
                       posIndex = midIndex;
                       setImageView();
                       velocity = 0;
                     } else {
+                      heart--;
                       isLose = true;
                       timeline.pause();
                       System.out.println("lose");
+                      if (heart >= 1)
+                        loadNewLevel();
                     }
+
                   }
                 }));
   }
-  @FXML
-  public void moveKeyPress(KeyEvent event) {
-    System.out.println("click");
-      switch (event.getCode()) {
-          case LEFT -> {
-              System.out.println("left");
-              moveLeft();
-          }
-          case RIGHT -> {
-              System.out.println("right");
-              moveRight();
-          }
-          case DOWN -> {
-              if (!isLose
-                      && letterImageView.getLayoutY() + letterImageView.getFitHeight() + 50
-                      < pane1.getLayoutY()) {
-                  moveDown();
-              }
-          }
-      }
 
-    }
-
+  private void finishedGame() {
+    timeline.pause();
+    isLose = true;
+    velocity = 0 ;
+  }
 
   @FXML
   void onPlayAgainClick() {
-    velocity = 0;
-    isLose = false;
-    System.out.println("again");
-    timeline.play();
-
-          letterList.clear();
-
-          letterImageView.setVisible(false);
-
-          score = 0;
-          scoreLabel.setText(String.valueOf(score));
-
-          loadWordsFromFile();
-          loadWordExplainFromFile();
-          selectRandomWord();
-          displayWordExplain();
-
-          for (int i = 0; i < 8; i++) {
-            imageViewList.get(i).setVisible(false);
-          }
-
-          addLetterInPane();
-          loadLevel();
-
-          System.out.println(currentWord);
-
-          for (int i = 0; i < currentWord.length(); i++) {
-            letterList.add(currentWord.charAt(i));
-          }
-
-          for (Character character : letterList) {
-            System.out.print(character);
-          }
-
-          System.out.println();
-
-          letterImageView.setVisible(true);
-
-          setImageView();
-
+    score = 0;
+    heart = 3;
+    loadNewLevel();
   }
 
   public void addPane() {
@@ -409,19 +372,19 @@ public class GameTetris implements Initializable {
   }
 
   public void setLetterImageOnPane() {
-    try{
-    switch (posIndex) {
-      case 1 -> imageViewList.get(0).setImage(new Image(imagePath));
-      case 2 -> imageViewList.get(1).setImage(new Image(imagePath));
-      case 3 -> imageViewList.get(2).setImage(new Image(imagePath));
-      case 4 -> imageViewList.get(3).setImage(new Image(imagePath));
-      case 5 -> imageViewList.get(4).setImage(new Image(imagePath));
-      case 6 -> imageViewList.get(5).setImage(new Image(imagePath));
-      case 7 -> imageViewList.get(6).setImage(new Image(imagePath));
-      case 8 -> imageViewList.get(7).setImage(new Image(imagePath));
-      default -> {}
-    }}
-    catch (IllegalArgumentException e){
+    try {
+      switch (posIndex) {
+        case 1 -> imageViewList.get(0).setImage(new Image(imagePath));
+        case 2 -> imageViewList.get(1).setImage(new Image(imagePath));
+        case 3 -> imageViewList.get(2).setImage(new Image(imagePath));
+        case 4 -> imageViewList.get(3).setImage(new Image(imagePath));
+        case 5 -> imageViewList.get(4).setImage(new Image(imagePath));
+        case 6 -> imageViewList.get(5).setImage(new Image(imagePath));
+        case 7 -> imageViewList.get(6).setImage(new Image(imagePath));
+        case 8 -> imageViewList.get(7).setImage(new Image(imagePath));
+        default -> {}
+      }
+    } catch (IllegalArgumentException e) {
       System.out.println(imagePath);
     }
   }
@@ -446,7 +409,6 @@ public class GameTetris implements Initializable {
       if (character == null) return false;
       word.append(character);
     }
-
     return word.toString().equals(currentWord);
   }
 
@@ -472,6 +434,39 @@ public class GameTetris implements Initializable {
 
   public void correctWord() {
     score += 10;
+    loadNewLevel();
+  }
+
+  public void loadNewLevel() {
+    velocity = 0;
+    isLose = false;
+    System.out.println("next level");
+    timeline.play();
+    letterList.clear();
+    letterImageView.setVisible(false);
+    scoreLabel.setText(String.valueOf(score));
+    selectRandomWord();
+    displayWordExplain();
+    for (int i = 0; i < 8; i++) {
+      imageViewList.get(i).setVisible(false);
+    }
+    addLetterInPane();
+    loadLevel();
+
+    System.out.println(currentWord);
+
+    for (int i = 0; i < currentWord.length(); i++) {
+      letterList.add(currentWord.charAt(i));
+    }
+
+    for (Character character : letterList) {
+      System.out.print(character);
+    }
+    letterImageView.setVisible(true);
+    setImageView();
+  }
+
+  public void incorrectWord() {
     scoreLabel.setText(String.valueOf(score));
     setVisiblePane();
     selectRandomWord();
@@ -494,12 +489,5 @@ public class GameTetris implements Initializable {
 
     letterImageView.setLayoutX(getLayoutXPane(1));
     letterImageView.setLayoutY(0);
-
-    System.out.println("correct");
-  }
-
-  public void incorrectWord() {
-    letterImageView.setVisible(false);
-    System.out.println("incorrect");
   }
 }

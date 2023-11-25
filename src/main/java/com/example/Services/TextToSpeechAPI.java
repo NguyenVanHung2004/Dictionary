@@ -8,15 +8,23 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class TextToSpeechAPI extends ApiConnection {
-  private final String webUrl = "https://api.voicerss.org/?key=c841bc4b9efd47f2a46f5b673be3984b";
-  private String language = "en-us";
-  public TextToSpeechAPI() {
+  private static TextToSpeechAPI instance = null;
+  protected TextToSpeechAPI() {
+  }
+
+  public static synchronized TextToSpeechAPI getInstance() {
+    if (instance == null)
+      instance = new TextToSpeechAPI();
+
+    return instance;
   }
 
   @Override
   public void prepareQuery(String query) {
-      query = URLEncoder.encode(query , StandardCharsets.UTF_8);
-     finalQuery =
+    query = URLEncoder.encode(query , StandardCharsets.UTF_8);
+    String webUrl = "https://api.voicerss.org/?key=c841bc4b9efd47f2a46f5b673be3984b";
+    String language = "en-us";
+    finalQuery =
             webUrl +  "&hl="
                     + language
                     + "&c="
@@ -31,8 +39,7 @@ public class TextToSpeechAPI extends ApiConnection {
     try {
       InputStream is = connection.getInputStream();
       InputStream bufferedIn = new BufferedInputStream(is);
-      AudioInputStream ais = AudioSystem.getAudioInputStream(bufferedIn);
-      return ais;
+        return AudioSystem.getAudioInputStream(bufferedIn);
     } catch (Exception e) {
       System.out.println("Text-to-speech conversion and playback failed: " + e.getMessage());
     }

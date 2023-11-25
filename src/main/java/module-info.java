@@ -26,5 +26,7 @@
      opens com.example to javafx.fxml;
      exports com.example.Controllers;
      exports com.example;
+     exports com.example.Services;
+  exports com.example.Models;
 
 }

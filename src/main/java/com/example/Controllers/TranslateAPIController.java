@@ -1,6 +1,7 @@
 package com.example.Controllers;
 
 import com.example.Services.ApiConnection;
+import com.example.Services.AudioPlayer;
 import com.example.Services.TextToSpeechAPI;
 import com.example.Services.TranslateAPI;
 import javafx.collections.FXCollections;
@@ -34,6 +35,7 @@ public class TranslateAPIController implements Initializable {
       FXCollections.observableArrayList();
   private final Map<String, String> mapCountries = new LinkedHashMap<>();
   ApiConnection apiConnection;
+  AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
@@ -41,11 +43,12 @@ public class TranslateAPIController implements Initializable {
     outputSentence.setWrapText(true);
     translateButton.setDisable(true);
 
-    System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+    System.setProperty(
+        "freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
     try {
       File countriesTxt =
           new File(
-                  "G:\\Java\\OOP_BTL\\EnglishApp\\src\\main\\resources\\com\\example\\text\\countries.txt");
+              "G:\\Java\\OOP_BTL\\EnglishApp\\src\\main\\resources\\com\\example\\text\\countries.txt");
       Scanner sc = new Scanner(countriesTxt);
       while (sc.hasNext()) {
         mapCountries.put(sc.nextLine(), sc.nextLine());
@@ -68,11 +71,11 @@ public class TranslateAPIController implements Initializable {
           protected Void call() throws Exception {
             translateButton.setDisable(true);
             String input = inputSentence.getText();
-            TranslateAPI translateAPIConnection = new TranslateAPI();
+            TranslateAPI translateAPIConnection = TranslateAPI.getInstance();
+            translateAPIConnection.prepareQuery(input);
             translateAPIConnection.setInputLanguage(getChoiceBoxTranslateFrom().getValue());
             translateAPIConnection.setOutputLanguage(getChoiceBoxTranslateTo().getValue());
-            translateAPIConnection.prepareQuery(input);
-            String myDef =  translateAPIConnection.getOutPutString();
+            String myDef = translateAPIConnection.getOutPutString();
             System.out.println(myDef);
             outputSentence.setText(myDef);
             return null;
@@ -100,9 +103,8 @@ public class TranslateAPIController implements Initializable {
           @Override
           protected Void call() throws Exception {
             try {
-              TextToSpeechAPI textToSpeech = new TextToSpeechAPI();
-              textToSpeech.prepareQuery(text);
-              textToSpeech.Speak();
+              audioPlayer.prepareQuery(text);
+              audioPlayer.speak();
             } catch (Exception e) {
               // Hiển thị thông báo lỗi
               System.out.println(
@@ -126,7 +128,11 @@ public class TranslateAPIController implements Initializable {
 
   @FXML
   void onKeyReleased() {
-    if (!inputSentence.getText().isEmpty()) translateButton.setDisable(false);
-    else translateButton.setDisable(true);
+    if (!inputSentence.getText().isEmpty()) {
+      translateButton.setDisable(false);
+    } else {
+      translateButton.setDisable(true);
+      outputSentence.clear();
+    }
   }
 }

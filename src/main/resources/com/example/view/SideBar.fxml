@@ -10,74 +10,74 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="840.0" styleClass="parent-style" stylesheets="@../style/style.css"  xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.SideBarController">
+<HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="840.0" styleClass="parent-style" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.SideBarController">
    <children>
       <VBox prefHeight="500.0" prefWidth="150.0" styleClass="sidebar-backgroundColor" stylesheets="@../style/style.css">
          <children>
             <AnchorPane prefHeight="166.0" prefWidth="154.0">
                <children>
                   <Separator layoutX="13.0" layoutY="56.0" opacity="0.63" prefHeight="3.0" prefWidth="120.0" />
-                  <Text fill="WHITE" layoutX="8.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dictionary" wrappingWidth="71.3101806640625">
+                  <Text layoutX="8.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dictionary" wrappingWidth="71.3101806640625">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
                   <FontAwesomeIcon fill="WHITE" glyphName="BARS" layoutX="113.0" layoutY="36.0" size="2em" text="" wrappingWidth="19.199951171875" />
-                  <Button blendMode="SRC_ATOP" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="154.0" stylesheets="@../style/style.css" text="Vietnamese" textFill="WHITE">
+                  <Button blendMode="SRC_ATOP" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="154.0" stylesheets="@../style/style.css" text="Vietnamese">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Button>
-                  <FontAwesomeIcon fill="#90ffbd" glyphName="BOOK" layoutX="14.0" layoutY="145.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="26.285712242126465" />
-                  <Button blendMode="SRC_ATOP" layoutY="68.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarEnglish" prefHeight="34.0" prefWidth="154.0" stylesheets="@../style/style.css" text="English" textFill="WHITE">
+                  <FontAwesomeIcon glyphName="BOOK" layoutX="14.0" layoutY="145.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="26.285712242126465" />
+                  <Button blendMode="SRC_ATOP" layoutY="68.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarEnglish" prefHeight="34.0" prefWidth="154.0" stylesheets="@../style/style.css" text="English">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <FontAwesomeIcon fill="WHITE" glyphName="BOOK" layoutX="14.0" layoutY="95.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="30.39996337890625" />
+                  <FontAwesomeIcon glyphName="BOOK" layoutX="14.0" layoutY="95.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="30.39996337890625" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="86.0" prefWidth="154.0">
                <children>
-                  <Text fill="WHITE" layoutX="3.0" layoutY="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Translate" wrappingWidth="71.3101806640625">
+                  <Text layoutX="3.0" layoutY="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Translate" wrappingWidth="71.3101806640625">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
                   <Separator layoutX="13.0" layoutY="14.0" opacity="0.63" prefHeight="16.0" prefWidth="120.0" />
-                  <Button contentDisplay="BOTTOM" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#clickedTranslateAPI" prefHeight="34.0" prefWidth="154.0" text="TranslateAPI" textFill="WHITE">
+                  <Button contentDisplay="BOTTOM" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#clickedTranslateAPI" prefHeight="34.0" prefWidth="154.0" text="TranslateAPI">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <FontAwesomeIcon fill="WHITE" glyphName="LANGUAGE" layoutX="13.0" layoutY="55.0" size="2em" text="" wrappingWidth="26.285712242126465" />
+                  <FontAwesomeIcon glyphName="LANGUAGE" layoutX="13.0" layoutY="55.0" selectionFill="BLACK" size="2em" text="" wrappingWidth="26.285712242126465" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="196.0" prefWidth="146.0">
                <children>
-                  <Text fill="WHITE" layoutX="5.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My list" wrappingWidth="62.51019287109375">
+                  <Text layoutX="5.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My list" wrappingWidth="62.51019287109375">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
                   <Separator layoutX="16.0" layoutY="27.0" opacity="0.63" prefHeight="3.0" prefWidth="120.0" />
-                  <Button contentDisplay="BOTTOM" layoutX="-1.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarMyWord" prefHeight="34.0" prefWidth="153.0" text="My word" textFill="WHITE">
+                  <Button contentDisplay="BOTTOM" layoutX="-1.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarMyWord" prefHeight="34.0" prefWidth="153.0" text="My word">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <FontAwesomeIcon fill="#d1d1d1" glyphName="DATABASE" layoutX="10.0" layoutY="62.0" size="2em" text="" />
-                  <Button contentDisplay="BOTTOM" layoutX="-1.0" layoutY="165.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarLogOut" prefHeight="34.0" prefWidth="153.0" text="Log out" textFill="WHITE">
+                  <FontAwesomeIcon glyphName="DATABASE" layoutX="10.0" layoutY="62.0" selectionFill="BLACK" size="2em" text="" />
+                  <Button contentDisplay="BOTTOM" layoutX="-1.0" layoutY="165.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarLogOut" prefHeight="34.0" prefWidth="153.0" text="Log out">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <FontAwesomeIcon fill="WHITE" glyphName="" layoutX="20.0" layoutY="190.0" size="2em" text="" wrappingWidth="26.285712242126465" />
-                  <Button contentDisplay="BOTTOM" layoutY="100.0" mnemonicParsing="false" onMouseClicked="#clickedGame" prefHeight="34.0" prefWidth="153.0" text="Game" textFill="WHITE">
+                  <FontAwesomeIcon glyphName="" layoutX="20.0" layoutY="190.0" size="2em" text="" wrappingWidth="26.285712242126465" />
+                  <Button contentDisplay="BOTTOM" layoutY="100.0" mnemonicParsing="false" onMouseClicked="#clickedGame" prefHeight="34.0" prefWidth="153.0" text="Game">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <FontAwesomeIcon fill="#fff4f4" glyphName="GAMEPAD" layoutX="13.0" layoutY="125.0" size="2em" wrappingWidth="34.40002489089966" />
+                  <FontAwesomeIcon glyphName="GAMEPAD" layoutX="13.0" layoutY="125.0" size="2em" wrappingWidth="34.40002489089966" />
                </children>
             </AnchorPane>
          </children>
