@@ -1,8 +1,12 @@
 package com.example.Controllers;
 
 import com.example.Models.QuizzModel;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +16,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +55,10 @@ public class QuizzController implements Initializable {
   }
 
   void setQuizz() {
+    setDefaultStyle();
     progressBar.setProgress(currentQuestionIndex * 0.1);
     myScoreLabel.setText("SCORE: " + myScore);
-    smallLabel.setText(currentQuestionIndex + 1 + " / " + "20");
+    smallLabel.setText(currentQuestionIndex + " / " + "10");
     currentQuestion = randomQuestion.get(currentQuestionIndex);
     option1.setDisable(false);
     option2.setDisable(false);
@@ -61,7 +67,6 @@ public class QuizzController implements Initializable {
     submit.setDisable(true);
     next.setDisable(true);
     setDefaultStyle();
-
     question.setText(currentQuestion.getQuetion());
     option1.setText(currentQuestion.getOptionOne());
     option2.setText(currentQuestion.getOptionTwo());
@@ -149,8 +154,12 @@ public class QuizzController implements Initializable {
   @FXML
   public void clickedNextButton() {
     currentQuestionIndex++;
-    setDefaultStyle();
-    setQuizz();
+    if (currentQuestionIndex > 10) {
+      System.out.println("Finished");
+      resultDialog();
+    } else {
+      setQuizz();
+    }
   }
 
   public boolean checkAnswer() {
@@ -216,11 +225,27 @@ public class QuizzController implements Initializable {
           protected void succeeded() {
             jfxDialog.close();
             Collections.shuffle(questionList);
-            randomQuestion = questionList.subList(0, 10);
+            randomQuestion = questionList.subList(0, 11);
             setQuizz();
           }
         };
     new Thread(task).start();
   }
-  }
 
+  public void resultDialog() {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("SCORE"));
+    content.setBody(new Text("Your score is " + myScore + "/10" + "\n" + "Do you want to save?"));
+    JFXButton saveButton = new JFXButton("Save");
+    saveButton.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent actionEvent) {
+            GameController.closeDialog();
+          }
+        });
+    content.setActions(saveButton);
+    JFXDialog jfxDialog = new JFXDialog(contentArea, content, JFXDialog.DialogTransition.CENTER);
+    jfxDialog.show();
+  }
+}

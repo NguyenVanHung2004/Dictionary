@@ -1,8 +1,10 @@
 package com.example.Controllers;
 
+import com.example.Services.AudioPlayer;
 import com.example.Services.DatabaseConnection;
 
 import com.example.Services.TextToSpeechAPI;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,13 +17,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -31,7 +33,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EnViDicController implements Initializable {
-
+@FXML
+  public TextArea definitonTextArea;
+@FXML
+  public TextField wordTextField;
+  @FXML
+  public JFXButton acceptButton;
+  @FXML
+  public JFXButton declineButton;
+  Pane customDialog;
   @FXML private TextField keyWordField;
   @FXML ListView<String> searchList;
   @FXML WebView webView;
@@ -42,9 +52,10 @@ public class EnViDicController implements Initializable {
 
   public static ObservableList<String> vocabModelObservableList =
       FXCollections.observableArrayList();
-  public static String selectedWord;
+  private  String selectedWord;
   private String selectedDefinition;
-  private Pane dialog;
+
+
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
@@ -60,13 +71,15 @@ public class EnViDicController implements Initializable {
                   vocabModel -> {
                     if (newValue.isEmpty() || newValue.isBlank()) return true;
                     String searchKeyWord = newValue.toLowerCase();
-                    if (vocabModel.contains(searchKeyWord)) return true;
-                    return false;
+                      return vocabModel.startsWith(searchKeyWord);
                   });
             });
+
     SortedList<String> sortedData = new SortedList<>(filteredData);
     searchList.setItems(sortedData);
     searchList.getSelectionModel().selectedItemProperty().addListener(this::clickedColumn);
+
+
   }
 
   public void clickedColumn(
@@ -76,19 +89,19 @@ public class EnViDicController implements Initializable {
     selectedWord = searchList.getSelectionModel().getSelectedItems().toString();
     selectedWord = selectedWord.substring(1, selectedWord.length() - 1);
 
-    DatabaseConnection connectNow = new DatabaseConnection();
+    DatabaseConnection connectNow = DatabaseConnection.getInstance();
     Connection connectDB = connectNow.getDatabaseConnection();
 
-    String query = "SELECT definition FROM dictionary WHERE target = ?;";
+    String query = "SELECT definition FROM dictionary WHERE word = ?;";
     try {
       PreparedStatement preparedStatement = connectDB.prepareStatement(query);
       preparedStatement.setString(1 , selectedWord);
       System.out.println(query);
       ResultSet queryOutput = preparedStatement.executeQuery();
       while (queryOutput.next()) {
-        String myDefinition = queryOutput.getString("definition");
+        selectedDefinition = queryOutput.getString("definition");
         WebEngine webEngine = webView.getEngine();
-        webEngine.loadContent(myDefinition);
+        webEngine.loadContent(selectedDefinition.replace("\n", "<br>"));
       }
 
     } catch (SQLException e) {
@@ -97,36 +110,53 @@ public class EnViDicController implements Initializable {
   }
 
   public void addButtonClicked() throws IOException {
-    DialogController.type = "Add";
-    DialogController.databaseName = "dictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
-    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
-
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
+    Pane dialog = loader.load();
+    CustomDialog dialogController = loader.getController();
+    dialogController.setLabel("ADD");
+    JFXDialog jfxDialog = new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP);
+    dialogController.okButton.setOnAction(event -> {
+      dialogController.addToDatabase("dictionary");
+      jfxDialog.close();
+    });
+    jfxDialog.show();
   }
   public void updateButtonClicked() throws IOException {
-    DialogController.type = "Update";
-    DialogController.databaseName = "dictionary";
-    dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
-    new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP).show();
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
+    Pane dialog = loader.load();
+    CustomDialog dialogController = loader.getController();
+    dialogController.setLabel("UPDATE");
+    dialogController.setWordTextField(selectedWord);
+    dialogController.setDefinitionTextArea(selectedDefinition);
+    JFXDialog jfxDialog = new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP);
+    dialogController.okButton.setOnAction(event -> {
+      dialogController.updateToDatabase("dictionary" , selectedWord);
+      jfxDialog.close();
+    });
+    jfxDialog.show();
   }
+
   public void deleteButtonClicked() throws SQLException {
-    DatabaseConnection databaseConnection = new DatabaseConnection();
+    DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
     Connection connection = databaseConnection.getDatabaseConnection();
-    String query = "DELETE FROM dictionary WHERE target = ? ; " ;
+    String query = "DELETE FROM dictionary WHERE word = ? ; " ;
     PreparedStatement preparedStatement = connection.prepareStatement(query);
     preparedStatement.setString(1, selectedWord);
     preparedStatement.execute();
     preparedStatement.close();
   }
+
   public void speech(){
     Task<Void> task =
         new Task<>() {
           @Override
           protected Void call() throws Exception {
             try {
-              TextToSpeechAPI textToSpeechAPIConnection = new TextToSpeechAPI();
-              textToSpeechAPIConnection.prepareQuery(selectedWord);
-              textToSpeechAPIConnection.Speak();
+              AudioPlayer audioPlayer = AudioPlayer.getInstance();
+              audioPlayer.prepareQuery(selectedWord);
+              audioPlayer.speak();
             } catch (Exception e) {
               // Hiển thị thông báo lỗi
               System.out.println(

@@ -14,11 +14,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<StackPane fx:id="root" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@../style/style.css"  xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.EnViDicController">
+<StackPane fx:id="root" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.EnViDicController">
    <children>
-      <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="690.0" styleClass="backgroundColor" stylesheets ="@../style/style.css" >
+      <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="690.0" styleClass="backgroundColor" stylesheets="@../style/style.css">
           <children>
-              <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" opacity="0.68" prefHeight="40.0" prefWidth="269.0" promptText="Search here" styleClass="searchBar" stylesheets = "@../style/style.css"  />
+              <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" opacity="0.68" prefHeight="40.0" prefWidth="269.0" promptText="Search here" styleClass="searchBar" stylesheets="@../style/style.css" />
               <FontAwesomeIcon fx:id="searchButton" glyphName="SEARCH" layoutX="250.0" layoutY="43.0" size="2em" text="" wrappingWidth="19.199951171875">
                <fill>
                   <LinearGradient endX="1.0" endY="1.0">
@@ -37,19 +37,19 @@
                   </LinearGradient>
                </fill>
             </FontAwesomeIcon>
-              <ListView fx:id="searchList" layoutX="14.0" layoutY="57.0" prefHeight="433.0" prefWidth="186.0" styleClass="listview" stylesheets="@../style/style.css"  />
+              <ListView fx:id="searchList" layoutX="14.0" layoutY="57.0" prefHeight="433.0" prefWidth="186.0" styleClass="listview" stylesheets="@../style/style.css" />
               <WebView fx:id="webView" layoutX="214.0" layoutY="57.0" prefHeight="433.0" prefWidth="426.0" />
-              <Button fx:id="addButton" graphicTextGap="8.0" layoutX="345.0" layoutY="14.0" mnemonicParsing="false" onAction="#addButtonClicked" prefHeight="24.0" prefWidth="75.0" styleClass="add-button" stylesheets="@../style/style.css"  text="ADD" textAlignment="JUSTIFY" textFill="WHITE">
+              <Button fx:id="addButton" graphicTextGap="8.0" layoutX="345.0" layoutY="14.0" mnemonicParsing="false" onAction="#addButtonClicked" prefHeight="24.0" prefWidth="75.0" styleClass="add-button" stylesheets="@../style/style.css" text="ADD" textAlignment="JUSTIFY" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="updateButton" layoutX="435.0" layoutY="14.0" mnemonicParsing="false" onAction="#updateButtonClicked" prefHeight="30.0" prefWidth="75.0" styleClass="update-button" stylesheets="@../style/style.css"  text="UPDATE" textFill="WHITE">
+            <Button fx:id="updateButton" layoutX="435.0" layoutY="14.0" mnemonicParsing="false" onAction="#updateButtonClicked" prefHeight="30.0" prefWidth="75.0" styleClass="update-button" stylesheets="@../style/style.css" text="UPDATE" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="deleteButton" layoutX="534.0" layoutY="15.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="30.0" prefWidth="84.0" styleClass="delete-button" stylesheets="@../style/style.css"  text="DELETE" textFill="WHITE">
+            <Button fx:id="deleteButton" layoutX="534.0" layoutY="15.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="30.0" prefWidth="84.0" styleClass="delete-button" stylesheets="@../style/style.css" text="DELETE" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

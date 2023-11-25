@@ -59,8 +59,9 @@
             <Label alignment="CENTER" prefHeight="33.0" prefWidth="98.0" text="Score:" />
             <Label fx:id="scoreLabel" alignment="CENTER" prefHeight="30.0" prefWidth="99.0" textAlignment="CENTER" wrapText="true" />
             <Separator prefWidth="200.0" />
+            <Separator prefWidth="200.0" />
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="102.0" text="Definiton" />
-            <Label fx:id="wordExplain" alignment="CENTER" contentDisplay="CENTER" prefHeight="155.0" prefWidth="98.0" textAlignment="CENTER" wrapText="true">
+            <Label fx:id="wordExplain" alignment="CENTER" contentDisplay="CENTER" prefHeight="222.0" prefWidth="98.0" textAlignment="CENTER" wrapText="true">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

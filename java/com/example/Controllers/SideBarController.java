@@ -1,6 +1,7 @@
 package com.example.Controllers;
 
 
+import com.example.Models.VocabModel;
 import com.example.Services.DatabaseConnection;
 import com.jfoenix.controls.JFXDialog;
 import javafx.collections.FXCollections;
@@ -44,7 +45,8 @@ public class SideBarController implements Initializable {
   private JFXDialog jfxDialogVietnamese;
   private JFXDialog jfxDialogGame;
 
-  ObservableList<String> vocabModelObservableList = FXCollections.observableArrayList();
+  ObservableList<VocabModel> vocabModelObservableList = FXCollections.observableArrayList();
+  ObservableList<String> wordObservableList = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
@@ -56,21 +58,23 @@ public class SideBarController implements Initializable {
               @Override
               protected Void call() throws Exception {
 
-                DatabaseConnection connectNow = new DatabaseConnection();
+                DatabaseConnection connectNow = DatabaseConnection.getInstance();
                 Connection connectDB = connectNow.getDatabaseConnection();
 
-                String query = "SELECT target,definition FROM dictionary;";
+                String query = "SELECT word,definition FROM dictionary;";
                 try {
                   Statement statement = connectDB.createStatement();
                   ResultSet queryOutput = statement.executeQuery(query);
                   while (queryOutput.next()) {
-                    String myWord = queryOutput.getString("target");
-                    vocabModelObservableList.add(myWord);
+                    String myWord = queryOutput.getString("word");
+                    String myDefinition = queryOutput.getString("definition");
+                    vocabModelObservableList.add(new VocabModel(myWord,myDefinition));
+                    wordObservableList.add(myWord);
                   }
                 } catch (SQLException e) {
                   Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
                 }
-                EnViDicController.vocabModelObservableList = vocabModelObservableList;
+                EnViDicController.vocabModelObservableList = wordObservableList;
 
                 return null;
               }
