@@ -1,5 +1,7 @@
 package com.example.Services;
 
+import javafx.scene.control.Alert;
+
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -20,10 +22,9 @@ public class TextToSpeechAPI extends ApiConnection {
   }
 
   @Override
-  public void prepareQuery(String query) {
+  public void prepareQuery(String query , String language) {
     query = URLEncoder.encode(query , StandardCharsets.UTF_8);
     String webUrl = "https://api.voicerss.org/?key=c841bc4b9efd47f2a46f5b673be3984b";
-    String language = "en-us";
     finalQuery =
             webUrl +  "&hl="
                     + language
@@ -42,6 +43,7 @@ public class TextToSpeechAPI extends ApiConnection {
         return AudioSystem.getAudioInputStream(bufferedIn);
     } catch (Exception e) {
       System.out.println("Text-to-speech conversion and playback failed: " + e.getMessage());
+
     }
     return null;
   }

@@ -18,13 +18,9 @@ public class TranslateAPI extends ApiConnection {
   private String outputLanguage = "vi";
   private static TranslateAPI instance = null;
 
-    public void setInputLanguage(String inputLanguage) {
-        this.inputLanguage = inputLanguage;
-    }
 
-    public void setOutputLanguage(String outputLanguage) {
-        this.outputLanguage = outputLanguage;
-    }
+
+
 
 
     private TranslateAPI() {
@@ -37,13 +33,12 @@ public class TranslateAPI extends ApiConnection {
     }
 
     @Override
-    public void prepareQuery(String query) {
+    public void prepareQuery(String query , String langPair) {
 
-       // query = query.replace(" ","%20");
-       // query =  query.replace("\n",  "|" );
 
         query = URLEncoder.encode(query , StandardCharsets.UTF_8);
-        finalQuery = webUrl + query + "&langpair="  + "en|vi" +  "&key=270b9e8973cce9404f77";
+        System.out.println(query);
+        finalQuery = webUrl + query + "&langpair="  + langPair +  "&key=270b9e8973cce9404f77";
     }
 
   public JSONObject getJSONObject() throws IOException {
@@ -75,6 +70,8 @@ public class TranslateAPI extends ApiConnection {
         }
         return null;
     }
+
+
     public String getOutPutString(){
         try{
             JSONObject jsonObject = this.getJSONObject();
