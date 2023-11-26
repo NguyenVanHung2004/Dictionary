@@ -15,7 +15,7 @@ public abstract class ApiConnection {
 
   }
 
-  protected abstract void prepareQuery(String query);
+  protected abstract void prepareQuery(String query, String languague);
 
   public void getConnection() throws IOException {
       System.out.println(finalQuery);

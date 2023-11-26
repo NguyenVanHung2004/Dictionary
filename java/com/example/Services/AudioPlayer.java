@@ -1,5 +1,7 @@
 package com.example.Services;
 
+import javafx.scene.control.Alert;
+
 import javax.sound.sampled.*;
 import java.io.IOException;
 
@@ -47,7 +49,11 @@ public class AudioPlayer extends TextToSpeechAPI {
             ais.close();
             System.out.println("Text-to-speech conversion and playback completed.");
         } catch (Exception e) {
-            System.out.println("Text-to-speech conversion and playback failed: " + e.getMessage());
+
+            System.out.println("Text-to-speech conversion and playback failed : " + e.getMessage());
+
+
+
         }
     }
 

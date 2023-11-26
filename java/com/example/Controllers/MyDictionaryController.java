@@ -1,8 +1,12 @@
 package com.example.Controllers;
 
+import com.example.Services.AudioPlayer;
 import com.example.Services.DatabaseConnection;
 import com.example.Services.TextToSpeechAPI;
 import com.example.Models.VocabModel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -11,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import com.jfoenix.controls.JFXDialog;
@@ -33,12 +38,14 @@ public class MyDictionaryController implements Initializable {
   @FXML Button updateButton;
   @FXML Button deleteButton;
   @FXML Button addButton;
+  @FXML ImageView ttsImageView;
   @FXML StackPane root;
 
   private Pane dialog;
-  ObservableList<VocabModel> myVocabObservableList = FXCollections.observableArrayList();
+  static ObservableList<VocabModel> myVocabObservableList = FXCollections.observableArrayList();
   public static String selectedWord;
   public static String selectedDefinition;
+  StringProperty stringProperty = new SimpleStringProperty(selectedWord);
   DatabaseConnection databaseConnection = null;
   Connection connection = null;
 
@@ -46,8 +53,9 @@ public class MyDictionaryController implements Initializable {
   public void initialize(URL url, ResourceBundle resource) {
     databaseConnection = DatabaseConnection.getInstance();
     connection = databaseConnection.getDatabaseConnection();
-    updateButton.setDisable(true);
-    deleteButton.setDisable(true);
+    deleteButton.disableProperty().bind(Bindings.isNull(stringProperty));
+    updateButton.disableProperty().bind(Bindings.isNull(stringProperty));
+    ttsImageView.visibleProperty().bind(Bindings.isEmpty(stringProperty).not());
     String query = "SELECT * FROM mydictionary;";
     try {
       Statement statement = connection.createStatement();
@@ -68,8 +76,6 @@ public class MyDictionaryController implements Initializable {
   @FXML
   private void addButtonClicked() throws IOException {
 
-    //DialogController.type = "Add";
-  //  DialogController.databaseName = "mydictionary";
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     Pane dialog = loader.load();
@@ -79,18 +85,14 @@ public class MyDictionaryController implements Initializable {
     dialogController.okButton.setOnAction(event -> {
       dialogController.addToDatabase("mydictionary");
       jfxDialog.close();
+      refresh();
     });
     jfxDialog.show();
   }
 
   @FXML
-  private void updateButtonClicked() throws IOException {
-   // DialogController.type = "Update";
-   // DialogController.databaseName = "mydictionary";
-  // JFXDialog dialog = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
-  //  dialog.show();
-   //new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP).show();
-   // refresh();
+  private  void updateButtonClicked() throws IOException {
+
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     Pane dialog = loader.load();
@@ -108,20 +110,17 @@ public class MyDictionaryController implements Initializable {
 
   @FXML
   private void deleteButtonClicked() throws IOException, SQLException {
-    String query = "DELETE FROM mydictionary WHERE word = ? AND definition = ? ";
-    PreparedStatement preparedStatement = connection.prepareStatement(query);
-    preparedStatement.setString(1, selectedWord);
-    preparedStatement.setString(2, selectedDefinition);
-    preparedStatement.execute();
-    preparedStatement.close();
+
+    DatabaseConnection.deleteInDatabase("mydictionary" , selectedWord);
+    selectedWord = null;
+    stringProperty.set(null);
     refresh();
   }
 
   @FXML
   public void clickedTableView() {
     selectedWord = wordColumn.getCellData(myDicTableView.getSelectionModel().getSelectedIndex());
-    updateButton.setDisable(false);
-    deleteButton.setDisable(false);
+    stringProperty.set(selectedWord);
     selectedDefinition =
         definitionColumn.getCellData(myDicTableView.getSelectionModel().getSelectedIndex());
     System.out.println(selectedWord);
@@ -129,21 +128,23 @@ public class MyDictionaryController implements Initializable {
 
   public void speech() {
     Task<Void> task =
-        new Task<>() {
-          @Override
-          protected Void call() throws Exception {
-            try {
-              TextToSpeechAPI textToSpeechAPIConnection = TextToSpeechAPI.getInstance();
-              textToSpeechAPIConnection.prepareQuery(selectedWord);
-              textToSpeechAPIConnection.Speak();
-            } catch (Exception e) {
-              // Hiển thị thông báo lỗi
-              System.out.println(
-                  "Text-to-speech conversion and playback failed: " + e.getMessage());
-            }
-            return null;
-          }
-        };
+            new Task<>() {
+              @Override
+              protected Void call() throws Exception {
+                try {
+                  AudioPlayer audioPlayer = AudioPlayer.getInstance();
+                  audioPlayer.prepareQuery(selectedWord , "en-us");
+                  audioPlayer.speak();
+                } catch (Exception e) {
+
+                  // Hiển thị thông báo lỗi
+                  System.out.println(
+                          "Text-to-speech conversion and playback failed:   " + e.getMessage());
+
+                }
+                return null;
+              }
+            };
     new Thread(task).start();
   }
 

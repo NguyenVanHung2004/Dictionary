@@ -74,7 +74,7 @@ public class GameTetris implements Initializable {
   public static final double acceleration = 0.01;
   private int currentWordIndex;
   private int score;
-  private int heart = 3;
+
   private int posIndex;
   private int midIndex;
   private char currentLetter;
@@ -274,10 +274,6 @@ public class GameTetris implements Initializable {
             new KeyFrame(
                 Duration.seconds(0.017),
                 event -> {
-                  if (heart <= 0){
-                    finishedGame();
-                    return;
-                  }
                   if (checkLetterOnPane()) {
                     letterImageView.setLayoutY(letterImageView.getLayoutY() + velocity);
                     velocity += acceleration;
@@ -294,18 +290,16 @@ public class GameTetris implements Initializable {
                           correctWord();
                         } else {
                           incorrectWord();
-                          heart--;
                         }
                       }
                       posIndex = midIndex;
                       setImageView();
                       velocity = 0;
                     } else {
-                      heart--;
+
                       isLose = true;
                       timeline.pause();
                       System.out.println("lose");
-                      if (heart >= 1)
                         loadNewLevel();
                     }
 
@@ -322,7 +316,7 @@ public class GameTetris implements Initializable {
   @FXML
   void onPlayAgainClick() {
     score = 0;
-    heart = 3;
+
     loadNewLevel();
   }
 

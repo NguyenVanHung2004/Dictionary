@@ -36,7 +36,7 @@ public class DatabaseConnection {
     return databaseLink;
   }
 
-  public static void insertToDatabase(String databaseName , VocabModel newVocabModel)   {
+  public static void insertToDatabase(String databaseName , VocabModel newVocabModel) {
     try{
       DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
       Connection connection = databaseConnection.getDatabaseConnection();
@@ -64,6 +64,22 @@ public class DatabaseConnection {
       preparedStatement.close();
     }catch (SQLException ignored){
       System.out.println("Cannot update new definition to database");
+    }
+  }
+
+  public static void deleteInDatabase(String databaseName , String wordToDelete) throws SQLException {
+    try{
+    DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+    Connection connection = databaseConnection.getDatabaseConnection();
+    String query = "DELETE FROM "  + databaseName +  " WHERE word = ? ; ";
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+      System.out.println(query);
+    preparedStatement.setString(1, wordToDelete);
+    preparedStatement.execute();
+    preparedStatement.close();
+    }catch (SQLException sqlException){
+      System.out.println("Cannot delete word in database" + databaseName);
+
     }
   }
 

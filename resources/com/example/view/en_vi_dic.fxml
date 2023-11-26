@@ -54,7 +54,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <ImageView fitHeight="26.0" fitWidth="24.0" layoutX="640.0" layoutY="57.0" onMouseClicked="#speech" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ttsImageView" fitHeight="26.0" fitWidth="24.0" layoutX="606.0" layoutY="65.0" onMouseClicked="#speech" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/soundIcon.png" />
                </image>
