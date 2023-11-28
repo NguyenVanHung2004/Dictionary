@@ -17,7 +17,7 @@
          <children>
             <TextField fx:id="keyWordField" layoutX="21.0" layoutY="15.0" prefHeight="40.0" prefWidth="269.0" promptText="Search here" styleClass="searchBar" />
             <FontAwesomeIcon fx:id="searchButton" glyphName="SEARCH" layoutX="253.0" layoutY="43.0" size="2em" text="" wrappingWidth="19.199951171875" />
-            <TableView fx:id="myDicTableView" layoutX="21.0" layoutY="78.0" onMouseClicked="#clickedTableView" prefHeight="408.0" prefWidth="594.0" styleClass="table-view" stylesheets="@../style/style.css">
+            <TableView fx:id="myDicTableView" layoutX="24.0" layoutY="78.0" onMouseClicked="#clickedTableView" prefHeight="402.0" prefWidth="621.0" styleClass="table-view" stylesheets="@../style/style.css">
               <columns>
                 <TableColumn fx:id="wordColumn" prefWidth="165.60004043579102" text="Word" />
                 <TableColumn fx:id="definitionColumn" prefWidth="427.9999237060547" text="Definition" />
@@ -43,7 +43,7 @@
                   <Image url="@../style/style.css" />
                </image>
             </ImageView>
-            <ImageView fx:id="ttsImageView" fitHeight="26.0" fitWidth="24.0" layoutX="623.0" layoutY="78.0" onMouseClicked="#speech" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ttsImageView" fitHeight="26.0" fitWidth="24.0" layoutX="645.0" layoutY="24.0" onMouseClicked="#speech" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/soundIcon.png" />
                </image>

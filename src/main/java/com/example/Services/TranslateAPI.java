@@ -3,25 +3,14 @@ package com.example.Services;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.IOException;
-import java.net.NoRouteToHostException;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class TranslateAPI extends ApiConnection {
 
-  private final String webUrl = "https://api.mymemory.translated.net/get?q=";
-  private String inputLanguage = "en";
-  private String outputLanguage = "vi";
-  private static TranslateAPI instance = null;
-
-
-
-
-
+    private static TranslateAPI instance = null;
 
     private TranslateAPI() {
 
@@ -35,13 +24,13 @@ public class TranslateAPI extends ApiConnection {
     @Override
     public void prepareQuery(String query , String langPair) {
 
-
         query = URLEncoder.encode(query , StandardCharsets.UTF_8);
         System.out.println(query);
+        String webUrl = "https://api.mymemory.translated.net/get?q=";
         finalQuery = webUrl + query + "&langpair="  + langPair +  "&key=270b9e8973cce9404f77";
     }
 
-  public JSONObject getJSONObject() throws IOException {
+  public JSONObject getJSONObject() throws IOException, NoInternetException {
         getConnection();
         System.out.println( finalQuery);
         try {
@@ -72,13 +61,13 @@ public class TranslateAPI extends ApiConnection {
     }
 
 
-    public String getOutPutString(){
+    public String getOutPutString() throws NoInternetException {
         try{
             JSONObject jsonObject = this.getJSONObject();
             JSONObject responseData = (JSONObject) jsonObject.get("responseData");
-            return responseData.get("translatedText").toString().replace("|", "\n");
-        }catch (IOException noRouteToHostException ){
-            return "No Internet connection. Please check your Internet.";
+            return responseData.get("translatedText").toString();
+        }catch (IOException e ){
+            throw new RuntimeException(e);
         }
 
 

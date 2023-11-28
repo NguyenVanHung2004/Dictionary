@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane fx:id="stackPane" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.GameTetris2">
    <children>
       <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="690.0">
@@ -53,7 +52,7 @@
             </Pane>
             <Pane fx:id="pane8" layoutX="510.0" layoutY="420.0" prefHeight="50.0" prefWidth="50.0" style="-fx-border-width: 2px; -fx-border-color: #FF0000;">
                <children>
-                  <ImageView fx:id="paneImage8" fitHeight="56.0" fitWidth="50.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="paneImage8" fitHeight="56.0" fitWidth="50.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Separator layoutX="574.0" layoutY="1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="6.0" style="-fx-background-color: #6495ED;" />

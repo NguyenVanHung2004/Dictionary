@@ -43,7 +43,7 @@ public class GameTetris2 extends AbstractGame implements Initializable {
 
   @FXML private Label wordExplain;
   @FXML private Label suggestionLabel;
-  private List<Letter> lettersInPaneList = new ArrayList<>();
+  private final List<Letter> lettersInPaneList = new ArrayList<>();
   List<Pane> panesList = new ArrayList<>();
 
   StringBuilder myAnswer = new StringBuilder();

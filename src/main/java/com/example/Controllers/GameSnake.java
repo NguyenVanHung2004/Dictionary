@@ -35,7 +35,7 @@ public class GameSnake extends AbstractGame  implements Initializable  {
   @FXML private Label scoreLabel;
   @FXML private Label wordExplain;
 
-  private List<Point> snakeBody = new ArrayList<>();
+  private final List<Point> snakeBody = new ArrayList<>();
   private static final int WIDTH = 580;
   private static final int HEIGHT = 500;
   private static final int ROWS = 29;

@@ -11,10 +11,10 @@ import java.util.ResourceBundle;
 public class WebViewController implements Initializable {
     @FXML
     WebView webView ;
-    private WebEngine webEngine;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        webEngine = webView.getEngine();
+        WebEngine webEngine = webView.getEngine();
         webEngine.load("https://dictionary.cambridge.org/");
     }
 }

@@ -27,6 +27,6 @@
      exports com.example.Controllers;
      exports com.example;
      exports com.example.Services;
-  exports com.example.Models;
+        exports com.example.Models;
 
 }

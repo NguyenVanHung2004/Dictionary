@@ -1,34 +1,23 @@
 package com.example.Controllers;
 
-import com.example.Models.VocabModel;
 import com.example.Services.AudioPlayer;
 import com.example.Services.DatabaseConnection;
 import com.jfoenix.controls.JFXDialog;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.*;
-
-import java.util.Objects;
-import java.util.ResourceBundle;
 import javafx.stage.Stage;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SideBarController implements Initializable {
 
@@ -36,8 +25,6 @@ public class SideBarController implements Initializable {
   private Pane myWordPane;
   private Pane EnViDicPane;
   private Pane transApiPane;
-  private Pane animationPane;
-  private Pane gamePane;
 
   private WebView webViewPane;
   private JFXDialog jfxDialogMyWord;
@@ -53,22 +40,8 @@ public class SideBarController implements Initializable {
     Task<Void> task =
         new Task<>() {
           @Override
-          protected Void call() throws Exception {
-
-            DatabaseConnection connectNow = DatabaseConnection.getInstance();
-            Connection connectDB = connectNow.getDatabaseConnection();
-            String query = "SELECT word,definition FROM dictionary;";
-            try {
-              Statement statement = connectDB.createStatement();
-              ResultSet queryOutput = statement.executeQuery(query);
-              while (queryOutput.next()) {
-                String myWord = queryOutput.getString("word");
-                EnViDicController.wordObservableList.add(myWord);
-              }
-            } catch (SQLException e) {
-              Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
-            }
-
+          protected Void call(){
+            DatabaseConnection.getAllWordFromDatabaseToTrie("dictionary");
             return null;
           }
 
@@ -93,10 +66,9 @@ public class SideBarController implements Initializable {
         };
     new Thread(task).start();
     try {
-      animationPane =
-          FXMLLoader.load(
+      Pane animationPane = FXMLLoader.load(
               Objects.requireNonNull(
-                  getClass().getResource("/com/example/view/loading_animation.fxml")));
+                      getClass().getResource("/com/example/view/loading_animation.fxml")));
       jfxDialogAnimation =
           new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT);
       jfxDialogAnimation.show();
@@ -115,7 +87,7 @@ public class SideBarController implements Initializable {
   }
 
   @FXML
-  public void clickedSideBarMyWord(MouseEvent event) throws IOException {
+  public void clickedSideBarMyWord() throws IOException {
     closeAll();
     MyDictionaryController.myVocabObservableList.clear();
     myWordPane =
@@ -127,35 +99,34 @@ public class SideBarController implements Initializable {
   }
 
   @FXML
-  public void clickedSideBarVietnamese(MouseEvent event) throws IOException {
+  public void clickedSideBarVietnamese()   {
     closeAll();
     jfxDialogVietnamese = new JFXDialog(contentArea, EnViDicPane, JFXDialog.DialogTransition.LEFT);
     jfxDialogVietnamese.show();
   }
 
   @FXML
-  public void clickedTranslateAPI(MouseEvent event) throws IOException {
+  public void clickedTranslateAPI()   {
     closeAll();
     jfxDialogTransAPI = new JFXDialog(contentArea, transApiPane, JFXDialog.DialogTransition.LEFT);
     jfxDialogTransAPI.show();
   }
-
-  public void clickedSideBarEnglish(MouseEvent event) {
+  @FXML
+  public void clickedSideBarEnglish() {
     closeAll();
     contentArea.getChildren().removeAll();
     contentArea.getChildren().setAll(webViewPane);
   }
 
-  public void clickedSideBarLogOut(MouseEvent event) {
+  public void clickedSideBarLogOut() {
     closeAll();
     Stage stage = (Stage) contentArea.getScene().getWindow();
     stage.close();
   }
 
-  public void clickedGame(MouseEvent event) throws IOException {
+  public void clickedGame() throws IOException {
     closeAll();
-    gamePane =
-        FXMLLoader.load(
+    Pane gamePane = FXMLLoader.load(
             Objects.requireNonNull(getClass().getResource("/com/example/view/game_pane.fxml")));
     gamePane.requestFocus();
     jfxDialogGame = new JFXDialog(contentArea, gamePane, JFXDialog.DialogTransition.LEFT);
