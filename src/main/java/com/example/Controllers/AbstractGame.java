@@ -2,6 +2,7 @@ package com.example.Controllers;
 
 import com.example.Models.VocabModel;
 import com.example.Services.DatabaseConnection;
+import com.example.Services.WordAlreadyExistsException;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
@@ -71,8 +72,12 @@ public abstract class AbstractGame {
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         okButton.setOnAction(
                 actionEvent -> {
-                    DatabaseConnection.insertToDatabase(
-                            "mydictionary", new VocabModel(currentWord, currentDefinition));
+                    try {
+                        DatabaseConnection.insertToDatabase(
+                                "mydictionary", new VocabModel(currentWord, currentDefinition));
+                    } catch (WordAlreadyExistsException e) {
+                        throw new RuntimeException(e);
+                    }
                     dialog.close();
                 });
         cancelButton.setOnAction(

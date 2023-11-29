@@ -3,6 +3,8 @@ package com.example.Controllers;
 import com.example.Models.VocabModel;
 import com.example.Services.DatabaseConnection;
 
+import com.example.Services.EmptyInPutException;
+import com.example.Services.WordAlreadyExistsException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -36,22 +38,22 @@ public class CustomDialog implements Initializable {
     this.definitionTextArea.setText( definitionText);
   }
 
-
-  public void addToDatabase(String databaseName) {
+  public void addToDatabase(String databaseName)
+      throws WordAlreadyExistsException, EmptyInPutException {
     myWord = wordTextField.getText();
     myDefinition = definitionTextArea.getText();
 
     if (myWord.isEmpty() || myDefinition.isEmpty()) {
-      alertEmpty();
+      throw new EmptyInPutException("");
     }else {
       DatabaseConnection.insertToDatabase(databaseName, new VocabModel(myWord,myDefinition));
     }
   }
-  public void updateToDatabase(String databaseName, String oldWord) {
+  public void updateToDatabase(String databaseName, String oldWord) throws EmptyInPutException {
     myWord = wordTextField.getText();
     myDefinition = definitionTextArea.getText();
     if (myWord.isEmpty() || myDefinition.isEmpty()) {
-      alertEmpty();
+        throw new EmptyInPutException("");
     }else {
       DatabaseConnection.updateToDatabase(   databaseName , new VocabModel(myWord,myDefinition)  , oldWord);
     }

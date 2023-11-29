@@ -35,10 +35,22 @@ public class DatabaseConnection {
     return databaseLink;
   }
 
-  public static void insertToDatabase(String databaseName, VocabModel newVocabModel) {
+  public static void insertToDatabase(String databaseName, VocabModel newVocabModel) throws WordAlreadyExistsException {
     try {
       DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
       Connection connection = databaseConnection.getDatabaseConnection();
+
+      String checkQuery = "SELECT * FROM " + databaseName + " WHERE word = ?";
+      PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
+      checkStatement.setString(1, newVocabModel.getWord());
+      ResultSet resultSet = checkStatement.executeQuery();
+
+      if (resultSet.next()) {
+        // Nếu từ đã tồn tại, ném ra ngoại lệ
+        throw new WordAlreadyExistsException(resultSet.getString("word"));
+      }
+
+
       String sqlQuery = "INSERT INTO " + databaseName + "(word,definition) VALUES (? ,? ) ";
       PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
       preparedStatement.setString(1, newVocabModel.getWord());
@@ -57,6 +69,7 @@ public class DatabaseConnection {
       DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
       Connection connection = databaseConnection.getDatabaseConnection();
       String sqlQuery = "UPDATE " + databaseName + " SET word = ? , definition=?  WHERE word = ? ";
+      System.out.println(sqlQuery);
       PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
       preparedStatement.setString(1, newVocabModel.getWord());
       preparedStatement.setString(2, newVocabModel.getDefinition());
@@ -73,8 +86,8 @@ public class DatabaseConnection {
       DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
       Connection connection = databaseConnection.getDatabaseConnection();
       String query = "DELETE FROM " + databaseName + " WHERE word = ? ; ";
-      PreparedStatement preparedStatement = connection.prepareStatement(query);
       System.out.println(query);
+      PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setString(1, wordToDelete);
       preparedStatement.execute();
       preparedStatement.close();

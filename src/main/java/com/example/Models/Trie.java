@@ -5,11 +5,6 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-class TrieNode {
-    public HashMap<Character, TrieNode> children = new HashMap<>();
-    public boolean endOfWord;
-}
-
 public class Trie {
     private static TrieNode root = new TrieNode();
     private  Trie() {
@@ -31,6 +26,18 @@ public class Trie {
         current.endOfWord = true;
     }
 
+    public static void delete(String word){
+        TrieNode current = root;
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            TrieNode node = current.children.get(ch);
+            if (node == null) {
+                return ;
+            }
+            current = node;
+        }
+        current.endOfWord = false;
+    }
 
     public static ArrayList<String> getWordsFromNode(String prefix, TrieNode node, ArrayList<String> words) {
         if (node.endOfWord) {

@@ -1,8 +1,7 @@
 package com.example.Controllers;
 
 import com.example.Models.Trie;
-import com.example.Services.AudioPlayer;
-import com.example.Services.DatabaseConnection;
+import com.example.Services.*;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
@@ -14,8 +13,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
+
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,14 +51,13 @@ public class EnViDicController implements Initializable {
   StringProperty stringProperty = new SimpleStringProperty(null);
   private String selectedDefinition;
   WebEngine webEngine;
+  ObservableList<String> itemsOfListView = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
     deleteButton.disableProperty().bind(Bindings.isNull(stringProperty));
     updateButton.disableProperty().bind(Bindings.isNull(stringProperty));
     ttsImageView.visibleProperty().bind(Bindings.isEmpty(stringProperty).not());
-
-    ObservableList<String> itemsOfListView = FXCollections.observableArrayList();
     searchList.setItems(itemsOfListView);
     keyWordField
         .textProperty()
@@ -111,7 +108,11 @@ public class EnViDicController implements Initializable {
     JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
     dialogController.okButton.setOnAction(
         event -> {
-          dialogController.addToDatabase("dictionary");
+          try {
+            dialogController.addToDatabase("dictionary");
+          } catch (WordAlreadyExistsException | EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
           jfxDialog.close();
           refresh();
         });
@@ -132,22 +133,26 @@ public class EnViDicController implements Initializable {
     JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
     dialogController.okButton.setOnAction(
         event -> {
-          dialogController.updateToDatabase("dictionary", selectedWord);
+          try {
+            dialogController.updateToDatabase("dictionary", selectedWord);
+          } catch (EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
           jfxDialog.close();
           refresh();
         });
     jfxDialog.show();
   }
 
-  public void deleteButtonClicked() throws SQLException {
+  public void deleteButtonClicked() {
     DatabaseConnection.deleteInDatabase("dictionary", selectedWord);
+    Trie.delete(selectedWord);
     refresh();
     selectedWord = null;
     stringProperty.set(null);
   }
 
   public void speech() {
-
     Task<Void> task =
         new Task<>() {
           @Override
@@ -156,23 +161,10 @@ public class EnViDicController implements Initializable {
               AudioPlayer audioPlayer = AudioPlayer.getInstance();
               audioPlayer.prepareQuery(selectedWord, "en-us");
               audioPlayer.speak();
+            } catch (NoInternetException e) {
+              Platform.runLater(() -> openErrorDialog(e.getMessage()));
             } catch (Exception e) {
-              // Hiển thị thông báo lỗi
-              Platform.runLater(
-                  () -> {
-                    JFXDialogLayout content = new JFXDialogLayout();
-                    content.setHeading(new Text("Error"));
-                    content.setBody(
-                        new Text(
-                            "No Internet Connection.\nPlease check your internet connection and try again."));
-
-                    JFXButton okButton = new JFXButton("Okay");
-                    JFXDialog dialog =
-                        new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
-                    okButton.setOnAction(actionEvent -> dialog.close());
-                    content.setActions(okButton);
-                    dialog.show();
-                  });
+              throw new RuntimeException();
             }
             return null;
           }
@@ -211,5 +203,16 @@ public class EnViDicController implements Initializable {
     new Thread(task).start();
     selectedWord = null;
     keyWordField.clear();
+  }
+
+  void openErrorDialog(String text) {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("Error"));
+    content.setBody(new Text(text));
+    JFXButton okButton = new JFXButton("Okay");
+    JFXDialog dialog = new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
+    okButton.setOnAction(actionEvent -> dialog.close());
+    content.setActions(okButton);
+    dialog.show();
   }
 }

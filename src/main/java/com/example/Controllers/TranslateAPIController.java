@@ -49,10 +49,13 @@ public class TranslateAPIController implements Initializable {
   public void initialize(URL url, ResourceBundle resource) {
     inputSentence.setWrapText(true);
     outputSentence.setWrapText(true);
-    translateButton.setDisable(true);
+
     outputSentence.setEditable(false);
     ttsInputImageView.visibleProperty().bind(Bindings.isEmpty(stringInputProperty).not());
     ttsOutputImageView.visibleProperty().bind(Bindings.isEmpty(stringOutPutProperty).not());
+    //translateButton.disableProperty().bind(Bindings.isEmpty(stringInputProperty));
+      translateButton.disableProperty().bind(Bindings.isEmpty(stringInputProperty));
+
     inputSentence
         .textProperty()
         .addListener(
@@ -77,33 +80,33 @@ public class TranslateAPIController implements Initializable {
 
   @FXML
   private void translateButtonOnClick() {
+      outputSentence.setText("Translating ...");
     Task<Void> task =
         new Task<>() {
           @Override
           protected Void call() {
-            translateButton.setDisable(true);
+            stringInputProperty.set("");
             String input = inputSentence.getText();
             TranslateAPI translateAPIConnection = TranslateAPI.getInstance();
             String inputLang = mapCountries.get(choiceBoxTranslateFrom.getValue()).substring(0, 2);
             String outputLang = mapCountries.get(choiceBoxTranslateTo.getValue()).substring(0, 2);
             translateAPIConnection.prepareQuery(input, inputLang + "|" + outputLang);
-              String myDef = null;
-              try {
-                  myDef = translateAPIConnection.getOutPutString();
-              } catch (NoInternetException e) {
-                  Platform.runLater(
-                          () -> {
-                              openErrorDialog();
-                          });
-              }
-              System.out.println(myDef);
+            String myDef = null;
+            try {
+              myDef = translateAPIConnection.getOutPutString();
+            } catch (NoInternetException e) {
+              Platform.runLater(
+                  () -> {
+                    openErrorDialog();
+                  });
+            }
+
             outputSentence.setText(myDef);
             stringOutPutProperty.set(myDef);
             return null;
           }
-
           protected void succeeded() {
-            translateButton.setDisable(false);
+              stringInputProperty.set(" ");
           }
         };
     new Thread(task).start();
@@ -121,10 +124,10 @@ public class TranslateAPIController implements Initializable {
               } catch (NoInternetException e) {
                 Platform.runLater(
                     () -> {
-                        openErrorDialog();
+                      openErrorDialog();
                     });
               } catch (IOException | LineUnavailableException e) {
-                  throw new RuntimeException(e);
+                throw new RuntimeException(e);
               }
               return null;
             }
@@ -142,28 +145,26 @@ public class TranslateAPIController implements Initializable {
   void speechInput() {
     textToSpeech(inputSentence.getText(), mapCountries.get(choiceBoxTranslateFrom.getValue()));
   }
-  void openErrorDialog(){
-      JFXDialogLayout content = new JFXDialogLayout();
-      content.setHeading(new Text("Error"));
-      content.setBody(
-              new Text(
-                      "No Internet Connection.\nPlease check your internet connection and try again."));
 
-      JFXButton okButton = new JFXButton("Okay");
-      JFXDialog dialog =
-              new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
-      okButton.setOnAction(actionEvent -> dialog.close());
-      content.setActions(okButton);
-      dialog.show();
+  void openErrorDialog() {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("Error"));
+    content.setBody(
+        new Text("No Internet Connection.\nPlease check your internet connection and try again."));
+    JFXButton okButton = new JFXButton("Okay");
+    JFXDialog dialog = new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
+    okButton.setOnAction(actionEvent -> dialog.close());
+    content.setActions(okButton);
+    dialog.show();
   }
 
   @FXML
   void onKeyReleased() {
-    if (!inputSentence.getText().isEmpty()) {
-      translateButton.setDisable(false);
-    } else {
-      translateButton.setDisable(true);
-      outputSentence.clear();
-    }
+//    if (!inputSentence.getText().isEmpty()) {
+//      translateButton.setDisable(false);
+//    } else {
+//      translateButton.setDisable(true);
+//      outputSentence.clear();
+//    }
   }
 }

@@ -224,7 +224,7 @@ public class QuizzController implements Initializable {
   public void resultDialog() {
     JFXDialogLayout content = new JFXDialogLayout();
     content.setHeading(new Text("SCORE"));
-    content.setBody(new Text("Your score is " + myScore + "/10" + "\n" + "Do you want to save?"));
+    content.setBody(new Text("Your score is " + myScore + "/10" + "\n"));
     JFXButton saveButton = new JFXButton("Save");
     saveButton.setOnAction(
             actionEvent -> GameController.closeDialog());

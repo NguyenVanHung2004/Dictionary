@@ -1,17 +1,23 @@
 package com.example.Controllers;
 
-import com.example.Services.AudioPlayer;
-import com.example.Services.DatabaseConnection;
 import com.example.Models.VocabModel;
-import com.example.Services.NoInternetException;
+import com.example.Services.*;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,16 +27,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import com.jfoenix.controls.JFXDialog;
 import javafx.scene.text.Text;
-import java.io.IOException;
-import java.sql.*;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MyDictionaryController implements Initializable {
   @FXML TextField keyWordField;
@@ -47,8 +44,6 @@ public class MyDictionaryController implements Initializable {
   public static String selectedWord;
   public static String selectedDefinition;
   StringProperty stringProperty = new SimpleStringProperty(selectedWord);
-  DatabaseConnection databaseConnection = null;
-  Connection connection = null;
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
@@ -58,17 +53,32 @@ public class MyDictionaryController implements Initializable {
     myVocabObservableList = DatabaseConnection.getAllVocabModelFromDatabase("mydictionary");
     wordColumn.setCellValueFactory(new PropertyValueFactory<>("word"));
     definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
-    definitionColumn.setCellFactory( tc->{
-      TableCell<VocabModel, String> cell = new TableCell<>();
-      Text text = new Text();
-      cell.setGraphic(text);
-      cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-      text.wrappingWidthProperty().bind(cell.widthProperty());
-      text.textProperty().bind(cell.itemProperty());
-      return cell ;
-    });
-    myDicTableView.setItems(myVocabObservableList);
+    FilteredList<VocabModel> filteredList = new FilteredList<>(myVocabObservableList, b -> true);
+    keyWordField
+        .textProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              filteredList.setPredicate(
+                  vocabModel -> {
+                    if (newValue == null || newValue.isEmpty()) return true;
+                    return vocabModel.getWord().startsWith(newValue);
+                  });
+            });
 
+    SortedList<VocabModel> sortedList = new SortedList<>(filteredList);
+
+    myDicTableView.setItems(sortedList);
+
+    definitionColumn.setCellFactory(
+        tc -> {
+          TableCell<VocabModel, String> cell = new TableCell<>();
+          Text text = new Text();
+          cell.setGraphic(text);
+          cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+          text.wrappingWidthProperty().bind(cell.widthProperty());
+          text.textProperty().bind(cell.itemProperty());
+          return cell;
+        });
   }
 
   @FXML
@@ -82,7 +92,11 @@ public class MyDictionaryController implements Initializable {
     JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
     dialogController.okButton.setOnAction(
         event -> {
-          dialogController.addToDatabase("mydictionary");
+          try {
+            dialogController.addToDatabase("mydictionary");
+          } catch (WordAlreadyExistsException | EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
           jfxDialog.close();
           refresh();
         });
@@ -103,7 +117,11 @@ public class MyDictionaryController implements Initializable {
     JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
     dialogController.okButton.setOnAction(
         event -> {
-          dialogController.updateToDatabase("mydictionary", selectedWord);
+          try {
+            dialogController.updateToDatabase("mydictionary", selectedWord);
+          } catch (EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
           jfxDialog.close();
           refresh();
         });
@@ -139,21 +157,9 @@ public class MyDictionaryController implements Initializable {
             } catch (NoInternetException e) {
               Platform.runLater(
                   () -> {
-                    JFXDialogLayout content = new JFXDialogLayout();
-                    content.setHeading(new Text("Error"));
-                    content.setBody(
-                        new Text(
-                            "No Internet Connection.\nPlease check your internet connection and try again."));
-
-                    JFXButton okButton = new JFXButton("Okay");
-                    JFXDialog dialog =
-                        new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
-                    okButton.setOnAction(
-                        actionEvent -> dialog.close());
-                    content.setActions(okButton);
-                    dialog.show();
+                    openErrorDialog(e.getMessage());
                   });
-            }catch (Exception e){
+            } catch (Exception e) {
               throw new RuntimeException();
             }
 
@@ -164,19 +170,29 @@ public class MyDictionaryController implements Initializable {
   }
 
   public void refresh() {
-    Task<Void> task = new Task<Void>() {
-      @Override
-      protected Void call() throws Exception {
-        myVocabObservableList = DatabaseConnection.getAllVocabModelFromDatabase("mydictionary");
+    Task<Void> task =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            myVocabObservableList = DatabaseConnection.getAllVocabModelFromDatabase("mydictionary");
 
-        Platform.runLater(()-> myDicTableView.setItems(myVocabObservableList));
+            Platform.runLater(() -> myDicTableView.setItems(myVocabObservableList));
 
-        return null;
-      }
-    };
+            return null;
+          }
+        };
 
     new Thread(task).start();
+  }
 
-
+  void openErrorDialog(String text) {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("Error"));
+    content.setBody(new Text(text));
+    JFXButton okButton = new JFXButton("Okay");
+    JFXDialog dialog = new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
+    okButton.setOnAction(actionEvent -> dialog.close());
+    content.setActions(okButton);
+    dialog.show();
   }
 }

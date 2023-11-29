@@ -26,7 +26,7 @@ public class SideBarController implements Initializable {
   private Pane EnViDicPane;
   private Pane transApiPane;
 
-  private WebView webViewPane;
+  private Pane webViewPane;
   private JFXDialog jfxDialogMyWord;
   private JFXDialog jfxDialogEnViDic;
   private JFXDialog jfxDialogTransAPI;
@@ -44,7 +44,6 @@ public class SideBarController implements Initializable {
             DatabaseConnection.getAllWordFromDatabaseToTrie("dictionary");
             return null;
           }
-
           @Override
           protected void succeeded() {
             super.succeeded();
@@ -72,13 +71,12 @@ public class SideBarController implements Initializable {
       jfxDialogAnimation =
           new JFXDialog(contentArea, animationPane, JFXDialog.DialogTransition.LEFT);
       jfxDialogAnimation.show();
-
       transApiPane =
           FXMLLoader.load(
               Objects.requireNonNull(
                   getClass().getResource("/com/example/view/TranslateAPI.fxml")));
       webViewPane =
-          FXMLLoader.load(
+          FXMLLoader. load(
               Objects.requireNonNull(getClass().getResource("/com/example/view/WebView.fxml")));
 
     } catch (IOException e) {
