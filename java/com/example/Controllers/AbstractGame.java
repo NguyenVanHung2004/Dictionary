@@ -2,17 +2,10 @@ package com.example.Controllers;
 
 import com.example.Models.VocabModel;
 import com.example.Services.DatabaseConnection;
+import com.example.Services.WordAlreadyExistsException;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import javafx.animation.Timeline;
-import javafx.concurrent.Task;
-import javafx.fxml.FXML;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.fxml.FXML;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 public abstract class AbstractGame {
     @FXML
@@ -46,7 +44,7 @@ public abstract class AbstractGame {
                 wordExplainList.add(myDefinition);
             }
         } catch (SQLException e) {
-            Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, e);
         }
 
     }
@@ -74,8 +72,12 @@ public abstract class AbstractGame {
         JFXDialog dialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
         okButton.setOnAction(
                 actionEvent -> {
-                    DatabaseConnection.insertToDatabase(
-                            "mydictionary", new VocabModel(currentWord, currentDefinition));
+                    try {
+                        DatabaseConnection.insertToDatabase(
+                                "mydictionary", new VocabModel(currentWord, currentDefinition));
+                    } catch (WordAlreadyExistsException e) {
+                        throw new RuntimeException(e);
+                    }
                     dialog.close();
                 });
         cancelButton.setOnAction(

@@ -5,15 +5,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -72,20 +69,12 @@ public class QuizzController implements Initializable {
     option2.setText(currentQuestion.getOptionTwo());
     option3.setText(currentQuestion.getOptionThree());
     option4.setText(currentQuestion.getOptionFour());
-    switch (currentQuestion.getCorrectAnswer()) {
-      case 1:
-        correctAnswerButton = option1;
-        break;
-      case 2:
-        correctAnswerButton = option2;
-        break;
-      case 3:
-        correctAnswerButton = option3;
-        break;
-      case 4:
-        correctAnswerButton = option4;
-        break;
-    }
+      switch (currentQuestion.getCorrectAnswer()) {
+          case 1 -> correctAnswerButton = option1;
+          case 2 -> correctAnswerButton = option2;
+          case 3 -> correctAnswerButton = option3;
+          case 4 -> correctAnswerButton = option4;
+      }
   }
 
   @FXML
@@ -235,15 +224,10 @@ public class QuizzController implements Initializable {
   public void resultDialog() {
     JFXDialogLayout content = new JFXDialogLayout();
     content.setHeading(new Text("SCORE"));
-    content.setBody(new Text("Your score is " + myScore + "/10" + "\n" + "Do you want to save?"));
+    content.setBody(new Text("Your score is " + myScore + "/10" + "\n"));
     JFXButton saveButton = new JFXButton("Save");
     saveButton.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent actionEvent) {
-            GameController.closeDialog();
-          }
-        });
+            actionEvent -> GameController.closeDialog());
     content.setActions(saveButton);
     JFXDialog jfxDialog = new JFXDialog(contentArea, content, JFXDialog.DialogTransition.CENTER);
     jfxDialog.show();

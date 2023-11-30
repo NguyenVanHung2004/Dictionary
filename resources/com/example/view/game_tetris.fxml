@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<StackPane fx:id="stackPane" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.GameTetris2">
+<StackPane fx:id="stackPane" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.GameTetris">
    <children>
       <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="690.0">
          <children>
@@ -53,38 +52,64 @@
             </Pane>
             <Pane fx:id="pane8" layoutX="510.0" layoutY="420.0" prefHeight="50.0" prefWidth="50.0" style="-fx-border-width: 2px; -fx-border-color: #FF0000;">
                <children>
-                  <ImageView fx:id="paneImage8" fitHeight="56.0" fitWidth="50.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="paneImage8" fitHeight="56.0" fitWidth="50.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Separator layoutX="574.0" layoutY="1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="6.0" style="-fx-background-color: #6495ED;" />
-            <VBox layoutX="580.0" layoutY="1.0" prefHeight="500.0" prefWidth="110.0" style="-fx-border-radius: 50px;">
+            <Separator layoutX="80.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
+            <Separator layoutX="150.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
+            <Separator layoutX="220.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
+            <VBox layoutX="580.0" prefHeight="500.0" prefWidth="110.0" style="-fx-border-radius: 50px;">
                <children>
-                  <Label alignment="CENTER" prefHeight="33.0" prefWidth="110.0" text="Score:" />
-                  <Label fx:id="scoreLabel" alignment="CENTER" prefHeight="30.0" prefWidth="110.0" textAlignment="CENTER" wrapText="true" />
-                  <Separator prefHeight="8.0" prefWidth="110.0" />
-                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="110.0" text="Definiton" />
-                  <Label fx:id="wordExplain" alignment="CENTER" contentDisplay="CENTER" prefHeight="222.0" prefWidth="110.0" textAlignment="CENTER" wrapText="true">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Separator prefWidth="110.0" />
-                  <Label alignment="CENTER" prefHeight="32.0" prefWidth="110.0" text="Suggestion" />
-                  <Label fx:id="suggestionLabel" alignment="CENTER" prefHeight="41.0" prefWidth="110.0">
+                  <Label alignment="CENTER" prefHeight="41.0" prefWidth="110.0" text="Score">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
+                  <Label fx:id="scoreLabel" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="41.0" prefWidth="110.0" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                   <Separator prefWidth="110.0" />
-                  <Button fx:id="button" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#onPlayAgainClick" prefHeight="43.0" prefWidth="110.0" text="PLAY AGAIN" textAlignment="CENTER" />
+                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="110.0" text="Definition">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="wordExplain" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="197.0" prefWidth="110.0" textAlignment="CENTER" wrapText="true">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </Label>
+                  <Separator prefWidth="110.0" />
+                  <Label alignment="CENTER" prefHeight="32.0" prefWidth="110.0" text="Suggestion">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="suggestionLabel" alignment="TOP_CENTER" prefHeight="41.0" prefWidth="110.0">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Separator prefWidth="200.0" />
+                  <Button fx:id="button" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#onPlayAgainClick" prefHeight="43.0" prefWidth="110.0" text="PLAY AGAIN" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="30.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
                </children>
             </VBox>
-            <Separator layoutX="80.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
-            <Separator layoutX="150.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
-            <Separator layoutX="220.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
             <Separator layoutX="290.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
             <Separator layoutX="360.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />
             <Separator layoutX="430.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="6.0" />

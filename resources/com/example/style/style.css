@@ -26,8 +26,8 @@
 }
 .searchBar{
     -fx-background-radius : 30;
-    -fx-border-color : #5F5F89;
-   -fx-border-width : 5 ;
+    -fx-border-color : #000000;
+   -fx-border-width : 2 ;
    -fx-border-radius: 30;
 }
 .listview{
@@ -64,8 +64,9 @@
 
 }
 .table-view{
-    -fx-background-color : #FFDADA;
+    -fx-background-color : #108CE9;
     -fx-border-radius : 20;
+    -fx-text-background-color: #000000;
 }
 .text-area {
     -fx-background-radius : 10;
@@ -80,10 +81,15 @@
         -fx-border-radius : 10;
         -fx-border-width : 1;
         -fx-border-color : #6BDCEC ;
-
+}
+.custom-dialog > jfx-dialog-overlay-pane{
+        -fx-background-radius : 20;
+        -fx-border-radius:20;
+           -fx-background-color : #87CEFF;
 }
 
 .table-view .column-header-background{
+     -fx-text-background-color: #000000;
     -fx-background-color: linear-gradient(to bottom, #1dbbdd44, #93f9b944);
     -fx-background-radius: 7px 7px 0px 0px;
     -fx-background-insets: 0 11px 0 0;
@@ -94,8 +100,8 @@
     -fx-padding: 2 0 2 10px;
 }
 .table-row-cell: hover {
-    -fx-background-color: #93f9b911;
-    -fx-text-background-color: red;
+    -fx-background-color: #FFFFFF;
+    -fx-text-background-color: #BAE0F3;
 }
 .table-row-cell: odd{
     -fx-background-color: #93f9b911;
@@ -106,6 +112,11 @@
     -fx-background-color: #1dbbdd11;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
+}
+.table-row-cell:selected {
+    -fx-background-color: #005797;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
 }
 .question-label{
     -fx-background-color : 	#99FFFF;

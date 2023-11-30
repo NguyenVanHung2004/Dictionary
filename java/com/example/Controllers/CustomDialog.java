@@ -3,14 +3,18 @@ package com.example.Controllers;
 import com.example.Models.VocabModel;
 import com.example.Services.DatabaseConnection;
 
+import com.example.Services.EmptyInPutException;
+import com.example.Services.WordAlreadyExistsException;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CustomDialog  {
+
+public class CustomDialog implements Initializable {
   @FXML TextField wordTextField;
   @FXML TextArea definitionTextArea;
   @FXML Button okButton;
@@ -26,83 +30,37 @@ public class CustomDialog  {
   }
 
   public void setWordTextField(String wordTextField) {
+
     this.wordTextField.setText(wordTextField);
   }
 
-  public void setDefinitionTextArea(String definitionTextArea) {
-    this.definitionTextArea.setText( definitionTextArea);
+  public void setDefinitionTextArea(String definitionText) {
+    this.definitionTextArea.setText( definitionText);
   }
 
-
-  public void addToDatabase(String databaseName) {
+  public void addToDatabase(String databaseName)
+      throws WordAlreadyExistsException, EmptyInPutException {
     myWord = wordTextField.getText();
     myDefinition = definitionTextArea.getText();
 
     if (myWord.isEmpty() || myDefinition.isEmpty()) {
-      alertEmpty();
+      throw new EmptyInPutException("");
     }else {
       DatabaseConnection.insertToDatabase(databaseName, new VocabModel(myWord,myDefinition));
     }
   }
-  public void updateToDatabase(String databaseName, String oldWord) {
+  public void updateToDatabase(String databaseName, String oldWord) throws EmptyInPutException {
     myWord = wordTextField.getText();
     myDefinition = definitionTextArea.getText();
     if (myWord.isEmpty() || myDefinition.isEmpty()) {
-      alertEmpty();
+        throw new EmptyInPutException("");
     }else {
       DatabaseConnection.updateToDatabase(   databaseName , new VocabModel(myWord,myDefinition)  , oldWord);
     }
   }
 
-  private void alertEmpty(){
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setHeaderText(null);
-    alert.setContentText("Please fill all the data");
-    alert.showAndWait();
+    @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    definitionTextArea.setWrapText(true);
   }
-  /*
-  private void close(){
-    Stage stage = (Stage) (root.getScene().getWindow());
-    try {
-      Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/SideBar.fxml")));
-      Scene scene = new Scene(root);
-      scene.setFill(Color.TRANSPARENT);
-      stage.setScene(scene);
-    } catch(IOException ioe) {
-      ioe.printStackTrace();
-    }
-  }
-
-  private void Add() throws SQLException {
-    String sqlQuery;
-    if (databaseName.equals("dictionary") ){
-       sqlQuery = "INSERT INTO dictionary (word,definition) VALUES (? ,? ) ";
-      myDefinition = "<I><Q>" + myDefinition + "</Q></I>";   // web view format
-    }
-    else
-       sqlQuery = "INSERT INTO mydictionary(word,definition) VALUES (? ,? ) ";
-    PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
-    preparedStatement.setString(1, myWord);
-    preparedStatement.setString(2, myDefinition);
-    preparedStatement.execute();
-    preparedStatement.close();
-  }
-
-  private void update() throws SQLException {
-    String sqlQuery;
-    if (databaseName.equals("mydictionary") ){
-      sqlQuery = "UPDATE mydictionary SET word = ? , definition=?  WHERE word = ? ";
-    }else {
-      sqlQuery = "UPDATE dictionary SET word = ? , definition =?  WHERE word = ? ";
-    }
-    PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
-    preparedStatement.setString(1, myWord);
-    preparedStatement.setString(2, myDefinition);
-    preparedStatement.setString(3, myWord);
-    preparedStatement.execute();
-    preparedStatement.close();
-  }
-
-
-   */
 }

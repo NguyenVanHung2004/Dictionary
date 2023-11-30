@@ -1,14 +1,23 @@
 package com.example.Controllers;
 
-import com.example.Services.AudioPlayer;
-import com.example.Services.DatabaseConnection;
-import com.example.Services.TextToSpeechAPI;
 import com.example.Models.VocabModel;
+import com.example.Services.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,17 +27,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import com.jfoenix.controls.JFXDialog;
-
-import javax.sound.sampled.*;
-import java.io.IOException;
-import java.sql.*;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.scene.text.Text;
 
 public class MyDictionaryController implements Initializable {
   @FXML TextField keyWordField;
@@ -41,77 +40,97 @@ public class MyDictionaryController implements Initializable {
   @FXML ImageView ttsImageView;
   @FXML StackPane root;
 
-  private Pane dialog;
   static ObservableList<VocabModel> myVocabObservableList = FXCollections.observableArrayList();
   public static String selectedWord;
   public static String selectedDefinition;
   StringProperty stringProperty = new SimpleStringProperty(selectedWord);
-  DatabaseConnection databaseConnection = null;
-  Connection connection = null;
 
   @Override
   public void initialize(URL url, ResourceBundle resource) {
-    databaseConnection = DatabaseConnection.getInstance();
-    connection = databaseConnection.getDatabaseConnection();
     deleteButton.disableProperty().bind(Bindings.isNull(stringProperty));
     updateButton.disableProperty().bind(Bindings.isNull(stringProperty));
     ttsImageView.visibleProperty().bind(Bindings.isEmpty(stringProperty).not());
-    String query = "SELECT * FROM mydictionary;";
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet queryOutput = statement.executeQuery(query);
-      while (queryOutput.next()) {
-        String myWord = queryOutput.getString("word");
-        String myDefinition = queryOutput.getString("definition");
-        myVocabObservableList.add(new VocabModel(myWord, myDefinition));
-      }
-      wordColumn.setCellValueFactory(new PropertyValueFactory<>("word"));
-      definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
-      myDicTableView.setItems(myVocabObservableList);
-    } catch (SQLException e) {
-      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
-    }
+    myVocabObservableList = DatabaseConnection.getAllVocabModelFromDatabase("mydictionary");
+    wordColumn.setCellValueFactory(new PropertyValueFactory<>("word"));
+    definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
+    FilteredList<VocabModel> filteredList = new FilteredList<>(myVocabObservableList, b -> true);
+    keyWordField
+        .textProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              filteredList.setPredicate(
+                  vocabModel -> {
+                    if (newValue == null || newValue.isEmpty()) return true;
+                    return vocabModel.getWord().startsWith(newValue);
+                  });
+            });
+
+    SortedList<VocabModel> sortedList = new SortedList<>(filteredList);
+
+    myDicTableView.setItems(sortedList);
+
+    definitionColumn.setCellFactory(
+        tc -> {
+          TableCell<VocabModel, String> cell = new TableCell<>();
+          Text text = new Text();
+          cell.setGraphic(text);
+          cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+          text.wrappingWidthProperty().bind(cell.widthProperty());
+          text.textProperty().bind(cell.itemProperty());
+          return cell;
+        });
   }
 
   @FXML
   private void addButtonClicked() throws IOException {
-
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
+    loader.setLocation(
+        Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     Pane dialog = loader.load();
     CustomDialog dialogController = loader.getController();
     dialogController.setLabel("ADD");
-    JFXDialog jfxDialog = new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP);
-    dialogController.okButton.setOnAction(event -> {
-      dialogController.addToDatabase("mydictionary");
-      jfxDialog.close();
-      refresh();
-    });
+    JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
+    dialogController.okButton.setOnAction(
+        event -> {
+          try {
+            dialogController.addToDatabase("mydictionary");
+          } catch (WordAlreadyExistsException | EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
+          jfxDialog.close();
+          refresh();
+        });
     jfxDialog.show();
   }
 
   @FXML
-  private  void updateButtonClicked() throws IOException {
+  private void updateButtonClicked() throws IOException {
 
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
+    loader.setLocation(
+        Objects.requireNonNull(getClass().getResource("/com/example/view/dialog.fxml")));
     Pane dialog = loader.load();
     CustomDialog dialogController = loader.getController();
     dialogController.setLabel("UPDATE");
     dialogController.setWordTextField(selectedWord);
     dialogController.setDefinitionTextArea(selectedDefinition);
-    JFXDialog jfxDialog = new JFXDialog( root, dialog, JFXDialog.DialogTransition.TOP);
-    dialogController.okButton.setOnAction(event -> {
-      dialogController.updateToDatabase("mydictionary" , selectedWord);
-      jfxDialog.close();
-    });
+    JFXDialog jfxDialog = new JFXDialog(root, dialog, JFXDialog.DialogTransition.TOP);
+    dialogController.okButton.setOnAction(
+        event -> {
+          try {
+            dialogController.updateToDatabase("mydictionary", selectedWord);
+          } catch (EmptyInPutException e) {
+            openErrorDialog(e.getMessage());
+          }
+          jfxDialog.close();
+          refresh();
+        });
     jfxDialog.show();
   }
 
   @FXML
-  private void deleteButtonClicked() throws IOException, SQLException {
-
-    DatabaseConnection.deleteInDatabase("mydictionary" , selectedWord);
+  private void deleteButtonClicked() throws SQLException {
+    DatabaseConnection.deleteInDatabase("mydictionary", selectedWord);
     selectedWord = null;
     stringProperty.set(null);
     refresh();
@@ -128,44 +147,52 @@ public class MyDictionaryController implements Initializable {
 
   public void speech() {
     Task<Void> task =
-            new Task<>() {
-              @Override
-              protected Void call() throws Exception {
-                try {
-                  AudioPlayer audioPlayer = AudioPlayer.getInstance();
-                  audioPlayer.prepareQuery(selectedWord , "en-us");
-                  audioPlayer.speak();
-                } catch (Exception e) {
+        new Task<>() {
+          @Override
+          protected Void call() {
+            try {
+              AudioPlayer audioPlayer = AudioPlayer.getInstance();
+              audioPlayer.prepareQuery(selectedWord, "en-us");
+              audioPlayer.speak();
+            } catch (NoInternetException e) {
+              Platform.runLater(
+                  () -> {
+                    openErrorDialog(e.getMessage());
+                  });
+            } catch (Exception e) {
+              throw new RuntimeException();
+            }
 
-                  // Hiển thị thông báo lỗi
-                  System.out.println(
-                          "Text-to-speech conversion and playback failed:   " + e.getMessage());
-
-                }
-                return null;
-              }
-            };
+            return null;
+          }
+        };
     new Thread(task).start();
   }
 
   public void refresh() {
-    databaseConnection = DatabaseConnection.getInstance();
-    connection = databaseConnection.getDatabaseConnection();
-    myVocabObservableList.clear();
-    String query = "SELECT word,definition FROM mydictionary;";
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet queryOutput = statement.executeQuery(query);
-      while (queryOutput.next()) {
-        String myWord = queryOutput.getString("word");
-        String myDefinition = queryOutput.getString("definition");
-        myVocabObservableList.add(new VocabModel(myWord, myDefinition));
-      }
-      wordColumn.setCellValueFactory(new PropertyValueFactory<>("word"));
-      definitionColumn.setCellValueFactory(new PropertyValueFactory<>("definition"));
-      myDicTableView.setItems(myVocabObservableList);
-    } catch (SQLException e) {
-      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
-    }
+    Task<Void> task =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            myVocabObservableList = DatabaseConnection.getAllVocabModelFromDatabase("mydictionary");
+
+            Platform.runLater(() -> myDicTableView.setItems(myVocabObservableList));
+
+            return null;
+          }
+        };
+
+    new Thread(task).start();
+  }
+
+  void openErrorDialog(String text) {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("Error"));
+    content.setBody(new Text(text));
+    JFXButton okButton = new JFXButton("Okay");
+    JFXDialog dialog = new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
+    okButton.setOnAction(actionEvent -> dialog.close());
+    content.setActions(okButton);
+    dialog.show();
   }
 }

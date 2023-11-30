@@ -1,6 +1,7 @@
 package com.example.Controllers;
 
 import com.example.Models.Letter;
+import com.example.Models.SnakeBody;
 import com.jfoenix.controls.JFXDialog;
 import java.awt.*;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class GameSnake extends AbstractGame  implements Initializable  {
   @FXML private Label scoreLabel;
   @FXML private Label wordExplain;
 
-  private List<Point> snakeBody = new ArrayList<>();
+  private final List<SnakeBody> snakeBody = new ArrayList<>();
   private static final int WIDTH = 580;
   private static final int HEIGHT = 500;
   private static final int ROWS = 29;
@@ -44,7 +45,7 @@ public class GameSnake extends AbstractGame  implements Initializable  {
   Random random = new Random();
   StringBuilder myAnswer = new StringBuilder();
   private boolean isWin = false;
-  private Point snakeHead;
+  private SnakeBody snakeHead;
   private GraphicsContext gc;
   private int currentDirection;
   private static final int RIGHT = 0;
@@ -69,69 +70,63 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     JFXDialog jfxDialogAnimation =   new JFXDialog(stackPane, animationPane, JFXDialog.DialogTransition.LEFT);
     jfxDialogAnimation.show();
     Task<Void> task =
-            new Task<>() {
-              @Override
-              protected Void call() throws Exception {
-                loadVocabFromDatabase();
-                return null;
-              }
+        new Task<>() {
+          @Override
+          protected Void call()  {
+            loadVocabFromDatabase();
+            return null;
+          }
 
-              @Override
-              protected void succeeded() {
-                super.succeeded();
-                jfxDialogAnimation.close();
-                Canvas canvas = new Canvas(WIDTH, HEIGHT);
-                root.getChildren().add(canvas);
-                gc = canvas.getGraphicsContext2D();
-                isStart = false;
-                loadVocabFromDatabase();
-                selectRandomWord();
-                button.requestFocus();
-                generateFood();
-                button.addEventFilter(
-                        KeyEvent.KEY_PRESSED,
-                        event -> {
-                          if (event.getCode() == KeyCode.LEFT) {
-                            System.out.println("The 'L' key was pressed");
-                            if (currentDirection != RIGHT) {
-                              currentDirection = LEFT;
-                            }
+          @Override
+          protected void succeeded() {
+            super.succeeded();
+            jfxDialogAnimation.close();
+            Canvas canvas = new Canvas(WIDTH, HEIGHT);
+            root.getChildren().add(canvas);
+            gc = canvas.getGraphicsContext2D();
+            isStart = false;
+            selectRandomWord();
+            button.requestFocus();
+            generateFood();
+            button.addEventFilter(
+                KeyEvent.KEY_PRESSED,
+                event -> {
+                  if (event.getCode() == KeyCode.LEFT) {
+                    if (currentDirection != RIGHT) {
+                      currentDirection = LEFT;
+                    }
+                    event.consume();
+                  }
+                  if (event.getCode() == KeyCode.RIGHT) {
+                    if (currentDirection != LEFT) {
+                      currentDirection = RIGHT;
+                    }
+                    isStart = true;
+                    event.consume();
+                  }
+                  if (event.getCode() == KeyCode.DOWN) {
+                    if (currentDirection != UP) {
+                      currentDirection = DOWN;
+                    }
+                    event.consume();
+                  }
+                  if (event.getCode() == KeyCode.UP) {
+                    if (currentDirection != DOWN) {
+                      currentDirection = UP;
+                    }
+                    event.consume();
+                  }
+                });
 
-                            event.consume();
-                          }
-                          if (event.getCode() == KeyCode.RIGHT) {
-                            if (currentDirection != LEFT) {
-                              currentDirection = RIGHT;
-                            }
-                            isStart = true;
-                            System.out.println("The 'R' key was pressed");
-                            event.consume();
-                          }
-                          if (event.getCode() == KeyCode.DOWN) {
-                            if (currentDirection != UP) {
-                              currentDirection = DOWN;
-                            }
-                            System.out.println("The 'D' key was pressed");
-                            event.consume();
-                          }
-                          if (event.getCode() == KeyCode.UP) {
-                            if (currentDirection != DOWN) {
-                              currentDirection = UP;
-                            }
-                            System.out.println("The 'W' key was pressed");
-                            event.consume();
-                          }
-                        });
-
-                for (int i = 0; i < 3; i++) {
-                  snakeBody.add(new Point(5, ROWS / 2));
-                }
-                snakeHead = snakeBody.get(0);
-                timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> runLoop(gc)));
-                timeline.setCycleCount(Animation.INDEFINITE);
-                timeline.play();
-              }
-            };
+            for (int i = 0; i < 3; i++) {
+              snakeBody.add(new SnakeBody(5, ROWS / 2));
+            }
+            snakeHead = snakeBody.get(0);
+            timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> runLoop(gc)));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+          }
+        };
 
    new Thread(task).start();
     
@@ -144,7 +139,9 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     do {
       currentWordIndex = random.nextInt(wordList.size());
       currentWord = wordList.get(currentWordIndex);
-    } while (currentWord.length() > 7);
+    } while (currentWord.length() > 6 || currentWord.contains("-")
+            || currentWord.contains("/")
+    );
 
     String temp = currentWord;
     currentDefinition = wordExplainList.get(currentWordIndex);
@@ -163,6 +160,14 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     suggestionLabel.setText(shuffle.toString());
 
     wordList.remove(currentWordIndex);
+  }
+  @Override
+  public void loadNewLevel() {
+    isWin = false;
+    selectRandomWord();
+    myAnswer.delete(0, myAnswer.length());
+    myLetters.clear();
+    generateFood();
   }
   @Override
   public void runLoop(GraphicsContext gc) {
@@ -196,8 +201,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     for (Letter myLetter : myLetters) {
       gc.drawImage(
           loadLetterImage(myLetter.c),
-          myLetter.posX * SQUARE_SIZE,
-          myLetter.posY * SQUARE_SIZE,
+          myLetter.getPosX() * SQUARE_SIZE,
+          myLetter.getPosY() * SQUARE_SIZE,
           SQUARE_SIZE,
           SQUARE_SIZE);
     }
@@ -205,8 +210,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
 
   private void eatFood() {
     for (Letter myLetter : myLetters) {
-      if (snakeHead.getX() == myLetter.posX && snakeHead.getY() == myLetter.posY) {
-        snakeBody.add(new Point(-1, -1));
+      if (snakeHead.getPosX() == myLetter.posX && snakeHead.getPosY() == myLetter.posY) {
+        snakeBody.add(new SnakeBody(-1, -1));
         myLetter.posX = -100;
         myLetter.posY = -100;
         myAnswer.append(myLetter.c);
@@ -221,7 +226,6 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     char[] characters = temp.toCharArray();
 
     for (char character : characters) {
-
       Letter letter =
           new Letter(character, (int) (Math.random() * ROWS), ((int) (Math.random() * COLUMNS)));
       myLetters.add(letter);
@@ -232,8 +236,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
 
     gc.setFill(Color.web("4674E9"));
     gc.fillRoundRect(
-        snakeHead.getX() * SQUARE_SIZE,
-        snakeHead.getY() * SQUARE_SIZE,
+        snakeHead.getPosX() * SQUARE_SIZE,
+        snakeHead.getPosY() * SQUARE_SIZE,
         SQUARE_SIZE - 1,
         SQUARE_SIZE - 1,
         35,
@@ -241,8 +245,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
 
     for (int i = 1; i < snakeBody.size(); i++) {
       gc.fillRoundRect(
-          snakeBody.get(i).getX() * SQUARE_SIZE,
-          snakeBody.get(i).getY() * SQUARE_SIZE,
+          snakeBody.get(i).getPosX() * SQUARE_SIZE,
+          snakeBody.get(i).getPosY() * SQUARE_SIZE,
           SQUARE_SIZE - 1,
           SQUARE_SIZE - 1,
           20,
@@ -250,8 +254,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     }
 
     for (int i = snakeBody.size() - 1; i >= 1; i--) {
-      snakeBody.get(i).x = snakeBody.get(i - 1).x;
-      snakeBody.get(i).y = snakeBody.get(i - 1).y;
+      snakeBody.get(i).posX = snakeBody.get(i - 1).getPosX();
+      snakeBody.get(i).posY = snakeBody.get(i - 1).getPosY();
     }
   }
 
@@ -268,50 +272,29 @@ public class GameSnake extends AbstractGame  implements Initializable  {
       }
     }
   }
-  @Override
-  public void checkAnswer() {
-    StringBuilder currWord = new StringBuilder(currentWord);
-    System.out.println(myAnswer);
-    System.out.println(currWord);
-    if (myAnswer.length() == currWord.length())
-      if (myAnswer.compareTo(currWord) == 0) {
-        isWin = true;
-        score++;
-        System.out.println("correct");
-      } else {
-        isGameOver = true;
-      }
-  }
-  @Override
-  public void loadNewLevel() {
-    isWin = false;
-    selectRandomWord();
-    myAnswer.delete(0, myAnswer.length());
-    myLetters.clear();
-    generateFood();
-  }
+
 
   public void moveRight() {
-    snakeHead.x++;
+    snakeHead.moveRight();
   }
 
   public void moveLeft() {
-    snakeHead.x--;
+    snakeHead.moveLeft();
   }
 
   public void moveUp() {
-    snakeHead.y--;
+    snakeHead.moveUp();
   }
 
   public void moveDown() {
-    snakeHead.y++;
+    snakeHead.moveDown();
   }
 
   @FXML
   private void onPlayAgainClick() {
     snakeBody.clear();
     for (int i = 0; i < 3; i++) {
-      snakeBody.add(new Point(5, ROWS / 2));
+      snakeBody.add(new SnakeBody(5, ROWS / 2));
     }
     snakeHead = snakeBody.get(0);
     timeline.play();
@@ -322,20 +305,31 @@ public class GameSnake extends AbstractGame  implements Initializable  {
   }
 
   public void checkGameOver() {
-    if (snakeHead.x < 0
-        || snakeHead.y < 0
-        || snakeHead.x * SQUARE_SIZE >= WIDTH
-        || snakeHead.y * SQUARE_SIZE >= HEIGHT) {
+    if (snakeHead.getPosX() < 0
+        || snakeHead.getPosY() < 0
+        || snakeHead.getPosX() * SQUARE_SIZE >= WIDTH
+        || snakeHead.getPosY() * SQUARE_SIZE >= HEIGHT) {
       isGameOver = true;
     }
 
     // destroy itself
     for (int i = 1; i < snakeBody.size(); i++) {
-      if (snakeHead.x == snakeBody.get(i).getX() && snakeHead.getY() == snakeBody.get(i).getY()) {
+      if (snakeHead.posX == snakeBody.get(i).getPosX() && snakeHead.getPosY() == snakeBody.get(i).getPosY()) {
         isGameOver = true;
         break;
       }
     }
   }
-
+  @Override
+  public void checkAnswer() {
+    StringBuilder currWord = new StringBuilder(currentWord);
+    if (myAnswer.length() == currWord.length())
+      if (myAnswer.compareTo(currWord) == 0) {
+        isWin = true;
+        score++;
+        System.out.println("correct");
+      } else {
+        isGameOver = true;
+      }
+  }
 }

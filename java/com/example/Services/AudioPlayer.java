@@ -28,33 +28,22 @@ public class AudioPlayer extends TextToSpeechAPI {
         }
     }
 
-    public void speak() {
-        try {
+  public void speak() throws IOException, LineUnavailableException, NoInternetException {
             stop(); // Dừng âm thanh hiện tại (nếu có)
-
             AudioInputStream ais = this.getAudioInputStream();
             AudioFormat format = ais.getFormat();
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
             currentSource = (SourceDataLine) AudioSystem.getLine(info);
             currentSource.open(format);
             currentSource.start();
-
             int read;
             byte[] buffer = new byte[1024];
             while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
                 currentSource.write(buffer, 0, read);
             }
-
             currentSource.close();
             ais.close();
             System.out.println("Text-to-speech conversion and playback completed.");
-        } catch (Exception e) {
-
-            System.out.println("Text-to-speech conversion and playback failed : " + e.getMessage());
-
-
-
-        }
     }
 
 }
