@@ -100,7 +100,6 @@ public class TranslateAPIController implements Initializable {
                     openErrorDialog();
                   });
             }
-
             outputSentence.setText(myDef);
             stringOutPutProperty.set(myDef);
             return null;

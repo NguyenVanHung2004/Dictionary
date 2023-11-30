@@ -54,7 +54,6 @@ public class GameTetris extends AbstractGame implements Initializable {
 
   Letter currentLetter;
   int currColumnIndex = 1;
-
   boolean isWin;
   boolean isGameOver;
   List<Boolean> isEmptyPane;

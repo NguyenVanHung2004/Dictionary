@@ -46,7 +46,6 @@ public class DatabaseConnection {
       ResultSet resultSet = checkStatement.executeQuery();
 
       if (resultSet.next()) {
-        // Nếu từ đã tồn tại, ném ra ngoại lệ
         throw new WordAlreadyExistsException(resultSet.getString("word"));
       }
 

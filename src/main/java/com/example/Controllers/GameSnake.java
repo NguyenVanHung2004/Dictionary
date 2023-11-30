@@ -201,8 +201,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     for (Letter myLetter : myLetters) {
       gc.drawImage(
           loadLetterImage(myLetter.c),
-          myLetter.posX * SQUARE_SIZE,
-          myLetter.posY * SQUARE_SIZE,
+          myLetter.getPosX() * SQUARE_SIZE,
+          myLetter.getPosY() * SQUARE_SIZE,
           SQUARE_SIZE,
           SQUARE_SIZE);
     }
@@ -226,7 +226,6 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     char[] characters = temp.toCharArray();
 
     for (char character : characters) {
-
       Letter letter =
           new Letter(character, (int) (Math.random() * ROWS), ((int) (Math.random() * COLUMNS)));
       myLetters.add(letter);

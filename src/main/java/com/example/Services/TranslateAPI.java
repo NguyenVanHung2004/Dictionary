@@ -21,7 +21,6 @@ public class TranslateAPI extends ApiConnection {
 
   @Override
   public void prepareQuery(String query, String langPair) {
-
     query = URLEncoder.encode(query, StandardCharsets.UTF_8);
     System.out.println(query);
     String webUrl = "https://api.mymemory.translated.net/get?q=";
@@ -30,11 +29,8 @@ public class TranslateAPI extends ApiConnection {
 
   public JSONObject getJSONObject() throws IOException, NoInternetException {
     getConnection();
-    System.out.println(finalQuery);
     try {
-      // Check if connect is made
       int responseCode = connection.getResponseCode();
-
       if (responseCode != 200) {
         throw new RuntimeException("HttpResponseCode: " + responseCode);
       } else {
