@@ -67,60 +67,65 @@ public class GameTetris extends AbstractGame implements Initializable {
 
     Pane animationPane = null;
     try {
-      animationPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/view/loading_animation.fxml")));
+      animationPane =
+          FXMLLoader.load(
+              Objects.requireNonNull(
+                  getClass().getResource("/com/example/view/loading_animation.fxml")));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    JFXDialog jfxDialogAnimation =   new JFXDialog(stackPane, animationPane, JFXDialog.DialogTransition.LEFT);
+    JFXDialog jfxDialogAnimation =
+        new JFXDialog(stackPane, animationPane, JFXDialog.DialogTransition.LEFT);
     jfxDialogAnimation.show();
     Task<Void> task =
-            new Task<>() {
-              @Override
-              protected Void call() throws Exception {
+        new Task<>() {
+          @Override
+          protected Void call() throws Exception {
 
-              loadVocabFromDatabase();
-                  return null;
-              }
-              @Override
-              protected void succeeded() {
-                super.succeeded();
-                jfxDialogAnimation.close();
-                Canvas canvas = new Canvas(WIDTH, HEIGHT);
-                pane.getChildren().add(canvas);
-                gc = canvas.getGraphicsContext2D();
-                panesList.add(pane1);
-                panesList.add(pane2);
-                panesList.add(pane3);
-                panesList.add(pane4);
-                panesList.add(pane5);
-                panesList.add(pane6);
-                panesList.add(pane7);
-                panesList.add(pane8);
-                button.requestFocus();
-                button.focusTraversableProperty();
-                button.addEventFilter(
-                        KeyEvent.KEY_PRESSED,
-                        event -> {
-                          if (event.getCode() == KeyCode.LEFT) {
-                            moveLeft();
-                            event.consume();
-                          }
-                          if (event.getCode() == KeyCode.RIGHT) {
-                            moveRight();
-                            event.consume();
-                          }
-                          if (event.getCode() == KeyCode.DOWN) {
-                            moveDown();
-                            event.consume();
-                          }
-                        });
-                loadNewLevel();
-                timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> runLoop(gc)));
-                timeline.setCycleCount(Animation.INDEFINITE);
-                timeline.play();
-              }
-            };
-      new  Thread(task).start();
+            loadVocabFromDatabase();
+            return null;
+          }
+
+          @Override
+          protected void succeeded() {
+            super.succeeded();
+            jfxDialogAnimation.close();
+            Canvas canvas = new Canvas(WIDTH, HEIGHT);
+            pane.getChildren().add(canvas);
+            gc = canvas.getGraphicsContext2D();
+            panesList.add(pane1);
+            panesList.add(pane2);
+            panesList.add(pane3);
+            panesList.add(pane4);
+            panesList.add(pane5);
+            panesList.add(pane6);
+            panesList.add(pane7);
+            panesList.add(pane8);
+            button.requestFocus();
+            button.focusTraversableProperty();
+            button.addEventFilter(
+                KeyEvent.KEY_PRESSED,
+                event -> {
+                  if (event.getCode() == KeyCode.LEFT) {
+                    moveLeft();
+                    event.consume();
+                  }
+                  if (event.getCode() == KeyCode.RIGHT) {
+                    moveRight();
+                    event.consume();
+                  }
+                  if (event.getCode() == KeyCode.DOWN) {
+                    moveDown();
+                    event.consume();
+                  }
+                });
+            loadNewLevel();
+            timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> runLoop(gc)));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+          }
+        };
+    new Thread(task).start();
   }
 
   public void selectRandomWord() {
@@ -164,11 +169,12 @@ public class GameTetris extends AbstractGame implements Initializable {
   public void selectRandomLetterInWord() {
     if (!letterInWordList.isEmpty()) {
       int randomIndex = random.nextInt(letterInWordList.size());
-      currentLetter = new Letter(letterInWordList.get(randomIndex), 100, 100);
+      currentLetter = new Letter(letterInWordList.get(randomIndex), currColumnIndex, 100);
       System.out.println(currentLetter.c);
       letterInWordList.remove(randomIndex);
     }
   }
+
   @Override
   protected void runLoop(GraphicsContext gc) {
     if (isWin) {
@@ -196,7 +202,7 @@ public class GameTetris extends AbstractGame implements Initializable {
   private void drawCurrentLetter(GraphicsContext gc) {
     gc.drawImage(
         loadLetterImage(currentLetter.c),
-        (int) getLayoutXOfPane(currColumnIndex),
+        (int) getLayoutXOfPane(currentLetter.getPosX()),
         currentLetter.posY,
         50,
         50);
@@ -220,6 +226,7 @@ public class GameTetris extends AbstractGame implements Initializable {
       selectRandomLetterInWord();
     }
   }
+
   @Override
   public void loadNewLevel() {
     letterInWordList.clear();
@@ -239,18 +246,22 @@ public class GameTetris extends AbstractGame implements Initializable {
 
   public void moveRight() {
     if (currColumnIndex < currentWord.length() && !isGameOver) {
-      currColumnIndex++;
+      {
+        currColumnIndex++;
+      currentLetter.moveRight();
+      }
     }
   }
 
   public void moveLeft() {
     if (currColumnIndex > 1 && !isGameOver) {
       currColumnIndex--;
+      currentLetter.moveLeft();
     }
   }
 
   public void moveDown() {
-    currentLetter.posY += 30;
+    currentLetter.moveDown();
   }
 
   public double getLayoutXOfPane(int posIndex) {
@@ -291,6 +302,7 @@ public class GameTetris extends AbstractGame implements Initializable {
     loadNewLevel();
     timeline.play();
   }
+
   @Override
   public void checkGameOver() {
     if (!isEmptyPane.get(currColumnIndex - 1)) {
@@ -313,5 +325,4 @@ public class GameTetris extends AbstractGame implements Initializable {
         System.out.println("sai tu");
       }
   }
-
 }

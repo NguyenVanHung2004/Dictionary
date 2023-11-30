@@ -94,7 +94,7 @@ public class EnViDicController implements Initializable {
       }
 
     } catch (SQLException e) {
-      Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, e);
     }
   }
 

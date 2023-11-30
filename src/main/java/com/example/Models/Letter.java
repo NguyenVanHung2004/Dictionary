@@ -1,14 +1,26 @@
 package com.example.Models;
 
-public class Letter{
+public class Letter extends Entity implements  Moving{
     public char c;
-    public int posX;
-    public int posY;
-
     public Letter(char c, int x, int y){
+        super(x,y);
         this.c = c;
-        this.posX = x ;
-        this.posY = y ;
+    }
+    @Override
+    public void moveRight(){
+        this.posX++;
+    }
+    @Override
+    public void moveLeft(){
+        this.posX--;
+    }
+    @Override
+    public void moveUp(){
+        this.posY--;
+    }
+    @Override
+    public void moveDown(){
+        this.posY+=30;
     }
 
 

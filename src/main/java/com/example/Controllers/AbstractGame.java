@@ -44,7 +44,7 @@ public abstract class AbstractGame {
                 wordExplainList.add(myDefinition);
             }
         } catch (SQLException e) {
-            Logger.getLogger(SideBarController.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, e);
         }
 
     }
