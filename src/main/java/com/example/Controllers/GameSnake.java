@@ -92,11 +92,9 @@ public class GameSnake extends AbstractGame  implements Initializable  {
                 KeyEvent.KEY_PRESSED,
                 event -> {
                   if (event.getCode() == KeyCode.LEFT) {
-                    System.out.println("The 'L' key was pressed");
                     if (currentDirection != RIGHT) {
                       currentDirection = LEFT;
                     }
-
                     event.consume();
                   }
                   if (event.getCode() == KeyCode.RIGHT) {
@@ -104,21 +102,18 @@ public class GameSnake extends AbstractGame  implements Initializable  {
                       currentDirection = RIGHT;
                     }
                     isStart = true;
-                    System.out.println("The 'R' key was pressed");
                     event.consume();
                   }
                   if (event.getCode() == KeyCode.DOWN) {
                     if (currentDirection != UP) {
                       currentDirection = DOWN;
                     }
-                    System.out.println("The 'D' key was pressed");
                     event.consume();
                   }
                   if (event.getCode() == KeyCode.UP) {
                     if (currentDirection != DOWN) {
                       currentDirection = UP;
                     }
-                    System.out.println("The 'W' key was pressed");
                     event.consume();
                   }
                 });
@@ -144,9 +139,8 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     do {
       currentWordIndex = random.nextInt(wordList.size());
       currentWord = wordList.get(currentWordIndex);
-    } while (currentWord.length() > 7 && currentWord.contains("-")
-            && currentWord.contains("/")
-
+    } while (currentWord.length() > 6 || currentWord.contains("-")
+            || currentWord.contains("/")
     );
 
     String temp = currentWord;
@@ -166,6 +160,14 @@ public class GameSnake extends AbstractGame  implements Initializable  {
     suggestionLabel.setText(shuffle.toString());
 
     wordList.remove(currentWordIndex);
+  }
+  @Override
+  public void loadNewLevel() {
+    isWin = false;
+    selectRandomWord();
+    myAnswer.delete(0, myAnswer.length());
+    myLetters.clear();
+    generateFood();
   }
   @Override
   public void runLoop(GraphicsContext gc) {
@@ -271,28 +273,7 @@ public class GameSnake extends AbstractGame  implements Initializable  {
       }
     }
   }
-  @Override
-  public void checkAnswer() {
-    StringBuilder currWord = new StringBuilder(currentWord);
-    System.out.println(myAnswer);
-    System.out.println(currWord);
-    if (myAnswer.length() == currWord.length())
-      if (myAnswer.compareTo(currWord) == 0) {
-        isWin = true;
-        score++;
-        System.out.println("correct");
-      } else {
-        isGameOver = true;
-      }
-  }
-  @Override
-  public void loadNewLevel() {
-    isWin = false;
-    selectRandomWord();
-    myAnswer.delete(0, myAnswer.length());
-    myLetters.clear();
-    generateFood();
-  }
+
 
   public void moveRight() {
     snakeHead.moveRight();
@@ -340,5 +321,16 @@ public class GameSnake extends AbstractGame  implements Initializable  {
       }
     }
   }
-
+  @Override
+  public void checkAnswer() {
+    StringBuilder currWord = new StringBuilder(currentWord);
+    if (myAnswer.length() == currWord.length())
+      if (myAnswer.compareTo(currWord) == 0) {
+        isWin = true;
+        score++;
+        System.out.println("correct");
+      } else {
+        isGameOver = true;
+      }
+  }
 }

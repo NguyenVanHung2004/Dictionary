@@ -27,7 +27,7 @@
 .searchBar{
     -fx-background-radius : 30;
     -fx-border-color : #000000;
-   -fx-border-width : 5 ;
+   -fx-border-width : 2 ;
    -fx-border-radius: 30;
 }
 .listview{

@@ -14,7 +14,7 @@
    <children>
       <VBox prefHeight="500.0" prefWidth="150.0" styleClass="sidebar-backgroundColor" stylesheets="@../style/style.css">
          <children>
-            <AnchorPane prefHeight="166.0" prefWidth="154.0">
+            <AnchorPane prefHeight="166.0" prefWidth="150.0">
                <children>
                   <Separator layoutX="13.0" layoutY="56.0" opacity="0.63" prefHeight="3.0" prefWidth="120.0" />
                   <Text layoutX="8.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dictionary" wrappingWidth="71.3101806640625">
@@ -22,7 +22,6 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <FontAwesomeIcon fill="WHITE" glyphName="BARS" layoutX="113.0" layoutY="36.0" size="2em" text="" wrappingWidth="19.199951171875" />
                   <Button blendMode="SRC_ATOP" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#clickedSideBarVietnamese" prefHeight="34.0" prefWidth="154.0" stylesheets="@../style/style.css" text="Vietnamese">
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -36,7 +35,7 @@
                   <FontAwesomeIcon glyphName="BOOK" layoutX="14.0" layoutY="95.0" selectionEnd="0" selectionFill="#c48e88" size="2em" text="" wrappingWidth="30.39996337890625" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="86.0" prefWidth="154.0">
+            <AnchorPane prefHeight="86.0" prefWidth="150.0">
                <children>
                   <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Translate" wrappingWidth="71.3101806640625">
                      <font>
@@ -88,6 +87,6 @@
             </AnchorPane>
          </children>
       </VBox>
-      <StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="690.0" styleClass="jfx-dialog-overlay-pane" stylesheets="@../style/style.css" />
+      <StackPane fx:id="contentArea" prefHeight="500.0" prefWidth="690.0" style="-fx-background-color: #87CEFF; -fx-background-radius: 20; -fx-border-radius: 20;" />
    </children>
 </HBox>

@@ -2,18 +2,22 @@ package com.example.Controllers;
 
 import com.example.Services.AudioPlayer;
 import com.example.Services.DatabaseConnection;
+import com.example.Services.NoInternetException;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXDialogLayout;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainMenuController implements Initializable {
@@ -22,10 +26,10 @@ public class MainMenuController implements Initializable {
   private Pane myWordPane;
   private Pane EnViDicPane;
   private Pane transApiPane;
-   private Pane webViewPane;
+   public static Pane webViewPane;
   private JFXDialog jfxDialogMyWord;
   private JFXDialog jfxDialogEnViDic;
-  private JFXDialog webView;
+  public static  JFXDialog webView;
   private JFXDialog jfxDialogTransAPI;
   private JFXDialog jfxDialogVietnamese;
   private JFXDialog jfxDialogGame;
@@ -108,11 +112,15 @@ public class MainMenuController implements Initializable {
   }
   @FXML
   public void clickedSideBarEnglish() {
-    closeAll();
     webView = new JFXDialog(contentArea, webViewPane, JFXDialog.DialogTransition.LEFT);
     webView.show();
+    try {
+      WebViewController.checkInternetConnection();
+    } catch (NoInternetException e) {
+      webView.close();
+      openErrorDialog("No Internet connection");
+    }
   }
-
   public void clickedSideBarLogOut() {
     closeAll();
     Stage stage = (Stage) contentArea.getScene().getWindow();
@@ -135,9 +143,20 @@ public class MainMenuController implements Initializable {
     if (jfxDialogVietnamese != null) closeJFXDialog(jfxDialogVietnamese);
     if (jfxDialogGame != null) closeJFXDialog(jfxDialogGame);
     if (jfxDialogMyWord != null) closeJFXDialog(jfxDialogMyWord);
+    if(webView != null) closeJFXDialog(webView);
   }
 
   public void closeJFXDialog(JFXDialog jfxDialog) {
     jfxDialog.close();
+  }
+  void openErrorDialog(String text) {
+    JFXDialogLayout content = new JFXDialogLayout();
+    content.setHeading(new Text("Error"));
+    content.setBody(new Text(text));
+    JFXButton okButton = new JFXButton("Okay");
+    JFXDialog dialog = new JFXDialog(contentArea, content, JFXDialog.DialogTransition.CENTER);
+    okButton.setOnAction(actionEvent -> dialog.close());
+    content.setActions(okButton);
+    dialog.show();
   }
 }

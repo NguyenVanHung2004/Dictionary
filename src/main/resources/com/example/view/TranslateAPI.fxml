@@ -12,7 +12,7 @@
    <children>
       <AnchorPane prefHeight="500.0" prefWidth="690.0" styleClass="backgroundColor" stylesheets="@../style/style.css">
          <children>
-            <TextArea fx:id="inputSentence" layoutX="22.0" layoutY="94.0" onKeyReleased="#onKeyReleased" prefHeight="247.0" prefWidth="306.0" />
+            <TextArea fx:id="inputSentence" layoutX="22.0" layoutY="94.0"  prefHeight="247.0" prefWidth="306.0" />
             <TextArea fx:id="outputSentence" layoutX="358.0" layoutY="94.0" prefHeight="247.0" prefWidth="306.0" />
             <Button fx:id="translateButton" layoutX="186.0" layoutY="379.0" mnemonicParsing="false" onAction="#translateButtonOnClick" prefHeight="34.0" prefWidth="318.0" styleClass="add-button" stylesheets="@../style/style.css" text="TRANSLATE" />
             <ChoiceBox fx:id="choiceBoxTranslateFrom" layoutX="189.0" layoutY="50.0" prefHeight="25.0" prefWidth="130.0" stylesheets="@../style/style.css" />

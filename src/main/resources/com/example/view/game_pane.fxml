@@ -10,20 +10,20 @@
    <children>
       <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Button fx:id="quizzButton" layoutX="536.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#clickedQuizzButton" prefHeight="42.0" prefWidth="86.0" text="QUIZZ" />
-            <Button layoutX="80.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#gameTetrisClicked" prefHeight="42.0" prefWidth="86.0" text="Terris" />
+            <Button fx:id="quizzButton" layoutX="519.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#clickedQuizzButton" prefHeight="42.0" prefWidth="86.0" text="QUIZZ" />
+            <Button layoutX="91.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#gameTetrisClicked" prefHeight="42.0" prefWidth="86.0" text="Terris" />
             <Button layoutX="302.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#gameSnakeClicked" prefHeight="42.0" prefWidth="86.0" text="Snake" />
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="33.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="24.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/tetris.jpg" />
                </image>
             </ImageView>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="257.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="245.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/snake.jpg" />
                </image>
             </ImageView>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="479.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="462.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/quizz.jpg" />
                </image>

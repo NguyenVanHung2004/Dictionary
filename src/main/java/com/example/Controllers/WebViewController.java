@@ -45,26 +45,44 @@ public class WebViewController implements Initializable {
         }
         webEngine.load("https://dictionary.cambridge.org/");
         urlTextField.setText("https://dictionary.cambridge.org");
+        urlTextField.setEditable(false);
         history =  webEngine.getHistory();
         backButton.visibleProperty().bind(history.currentIndexProperty().greaterThan(0));
     }
     @FXML
-    public void refreshPage(){
+    public  void refreshPage(){
+        try {
+            checkInternetConnection();
+        } catch (NoInternetException e) {
+            openErrorDialog("No Internet connection");
+        }
         webEngine.reload();
     }
     public void back(){
+        try {
+            checkInternetConnection();
+        } catch (NoInternetException e) {
+            openErrorDialog("No Internet connection");
+        }
         history = webEngine.getHistory();
         ObservableList<WebHistory.Entry> entries = history.getEntries();
         if ( history.getCurrentIndex() > 1){
         history.go(-1);
         urlTextField.setText(entries.get(history.getCurrentIndex()).getUrl());
+
       }
     }
     public void home(){
+        try {
+            checkInternetConnection();
+        } catch (NoInternetException e) {
+            openErrorDialog("No Internet connection");
+        }
         webEngine.load("https://dictionary.cambridge.org/");
+
     }
 
-    public void checkInternetConnection() throws NoInternetException {
+    public static void checkInternetConnection() throws NoInternetException {
         try {
             InetAddress address = InetAddress.getByName("www.google.com");
             if (!address.isReachable(2000)) {
@@ -76,12 +94,25 @@ public class WebViewController implements Initializable {
     }
     void openErrorDialog(String text) {
         JFXDialogLayout content = new JFXDialogLayout();
-        content.setHeading(new Text("Error"));
+        content.setHeading(new Text(text));
         content.setBody(new Text(text));
         JFXButton okButton = new JFXButton("Okay");
         JFXDialog dialog = new JFXDialog(root, content, JFXDialog.DialogTransition.CENTER);
-        okButton.setOnAction(actionEvent -> dialog.close());
+        okButton.setOnAction(actionEvent ->
+                {
+                dialog.close();
+                MainMenuController.webView.close();
+                }
+        );
         content.setActions(okButton);
         dialog.show();
+    }
+    @FXML
+    void mousePressed(){
+        try {
+            checkInternetConnection();
+        } catch (NoInternetException e) {
+           openErrorDialog("No Internet");
+        }
     }
 }

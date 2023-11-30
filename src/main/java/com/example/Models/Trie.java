@@ -1,8 +1,5 @@
 package com.example.Models;
 
-import javafx.collections.ObservableList;
-
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Trie {
@@ -54,10 +51,10 @@ public class Trie {
             char ch = prefix.charAt(i);
             TrieNode node = current.children.get(ch);
             if (node == null) {
-                return new ArrayList<String>();  // Trả về danh sách rỗng nếu tiền tố không tồn tại
+                return new ArrayList<>();
             }
             current = node;
         }
-        return getWordsFromNode(prefix, current, new ArrayList<String>());
+        return getWordsFromNode(prefix, current, new ArrayList<>());
     }
 }

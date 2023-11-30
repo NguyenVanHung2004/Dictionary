@@ -79,7 +79,7 @@ public class TranslateAPIController implements Initializable {
   }
 
   @FXML
-  private void translateButtonOnClick() {
+  void translateButtonOnClick() {
       outputSentence.setText("Translating ...");
     Task<Void> task =
         new Task<>() {
@@ -158,13 +158,5 @@ public class TranslateAPIController implements Initializable {
     dialog.show();
   }
 
-  @FXML
-  void onKeyReleased() {
-//    if (!inputSentence.getText().isEmpty()) {
-//      translateButton.setDisable(false);
-//    } else {
-//      translateButton.setDisable(true);
-//      outputSentence.clear();
-//    }
-  }
+
 }

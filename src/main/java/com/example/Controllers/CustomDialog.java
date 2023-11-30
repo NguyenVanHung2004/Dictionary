@@ -59,14 +59,7 @@ public class CustomDialog implements Initializable {
     }
   }
 
-  private void alertEmpty(){
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setHeaderText(null);
-    alert.setContentText("Please fill all the data");
-    alert.showAndWait();
-  }
-
-  @Override
+    @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     definitionTextArea.setWrapText(true);
   }

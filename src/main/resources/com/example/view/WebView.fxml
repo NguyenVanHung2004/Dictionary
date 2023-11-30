@@ -7,12 +7,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.web.WebView?>
 
-
-<StackPane fx:id="root" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.WebViewController">
+<StackPane fx:id="root" prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Controllers.WebViewController">
    <children>
       <Pane prefHeight="500.0" prefWidth="690.0">
          <children>
-            <WebView id="webView" fx:id="webView" layoutY="50.0" prefHeight="430.0" prefWidth="690.0" />
+            <WebView id="webView" fx:id="webView" layoutY="50.0" onMousePressed="#mousePressed" prefHeight="430.0" prefWidth="690.0" />
             <ImageView fx:id="backButton" fitHeight="25.0" fitWidth="35.0" layoutX="14.0" layoutY="15.0" onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/arrow-back-outline.256x224.png" />

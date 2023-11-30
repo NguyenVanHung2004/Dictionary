@@ -73,7 +73,6 @@ public class EnViDicController implements Initializable {
 
   public void clickedColumn(
       ObservableValue<? extends String> observableValue, String old, String newValue) {
-
     selectedWord = searchList.getSelectionModel().getSelectedItems().toString();
     selectedWord = selectedWord.substring(1, selectedWord.length() - 1);
     stringProperty.set(selectedWord);
@@ -92,7 +91,6 @@ public class EnViDicController implements Initializable {
         webEngine = webView.getEngine();
         webEngine.loadContent(selectedDefinition.replace("\n", "<br>"));
       }
-
     } catch (SQLException e) {
       Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, e);
     }
@@ -193,7 +191,6 @@ public class EnViDicController implements Initializable {
             DatabaseConnection.getAllWordFromDatabaseToTrie("dictionary");
             return null;
           }
-
           @Override
           protected void succeeded() {
             super.succeeded();
@@ -202,7 +199,7 @@ public class EnViDicController implements Initializable {
         };
     new Thread(task).start();
     selectedWord = null;
-    keyWordField.clear();
+    keyWordField.setText("");
   }
 
   void openErrorDialog(String text) {

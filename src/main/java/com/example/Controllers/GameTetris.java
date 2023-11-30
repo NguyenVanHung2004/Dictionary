@@ -134,7 +134,8 @@ public class GameTetris extends AbstractGame implements Initializable {
     do {
       currentWordIndex = random.nextInt(wordList.size());
       currentWord = wordList.get(currentWordIndex);
-    } while (currentWord.length() > 7);
+    }  while (currentWord.length() > 6 || currentWord.contains("-")
+            || currentWord.contains("/") );
 
     String temp = currentWord;
     currentDefinition = wordExplainList.get(currentWordIndex);
@@ -169,8 +170,7 @@ public class GameTetris extends AbstractGame implements Initializable {
   public void selectRandomLetterInWord() {
     if (!letterInWordList.isEmpty()) {
       int randomIndex = random.nextInt(letterInWordList.size());
-      currentLetter = new Letter(letterInWordList.get(randomIndex), currColumnIndex, 100);
-      System.out.println(currentLetter.c);
+      currentLetter = new Letter(letterInWordList.get(randomIndex), 1, 100);
       letterInWordList.remove(randomIndex);
     }
   }
@@ -185,7 +185,7 @@ public class GameTetris extends AbstractGame implements Initializable {
       gameOver();
       return;
     }
-    gc.clearRect(0, 0, 500, 500);
+    gc.clearRect(0, 0, 580, 500);
     drawBackground(gc);
     drawCurrentLetter(gc);
 
@@ -200,6 +200,7 @@ public class GameTetris extends AbstractGame implements Initializable {
   }
 
   private void drawCurrentLetter(GraphicsContext gc) {
+    currentLetter.posX = currColumnIndex;
     gc.drawImage(
         loadLetterImage(currentLetter.c),
         (int) getLayoutXOfPane(currentLetter.getPosX()),
@@ -234,9 +235,10 @@ public class GameTetris extends AbstractGame implements Initializable {
     isWin = false;
     isGameOver = false;
     scoreLabel.setText(String.valueOf(score));
+    currColumnIndex = 1;
     selectRandomWord();
     selectRandomLetterInWord();
-    currColumnIndex = 1;
+
     myAnswer.delete(0, myAnswer.length());
     myAnswer.append("0".repeat(currentWord.length()));
     for (int i = 0; i < currentWord.length(); i++) {
@@ -307,7 +309,6 @@ public class GameTetris extends AbstractGame implements Initializable {
   public void checkGameOver() {
     if (!isEmptyPane.get(currColumnIndex - 1)) {
       isGameOver = true;
-      System.out.println("trung nhau");
     }
     checkAnswer();
   }
